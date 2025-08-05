@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 05, 2025 at 07:08 AM
+-- Generation Time: Aug 05, 2025 at 03:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -19063,6 +19063,65 @@ INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `debts`
+--
+
+CREATE TABLE `debts` (
+  `debt_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `debt_name` varchar(255) NOT NULL,
+  `lender_name` varchar(255) NOT NULL,
+  `original_amount` decimal(15,2) NOT NULL,
+  `current_balance` decimal(15,2) NOT NULL,
+  `interest_rate` decimal(5,2) NOT NULL,
+  `interest_type` enum('Simple','Compound') DEFAULT 'Simple',
+  `payment_frequency` enum('Monthly','Weekly','Daily') DEFAULT 'Monthly',
+  `start_date` date NOT NULL,
+  `due_date` date DEFAULT NULL,
+  `minimum_payment` decimal(15,2) DEFAULT 0.00,
+  `debt_priority` enum('High','Medium','Low') DEFAULT 'Medium',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `debts`
+--
+
+INSERT INTO `debts` (`debt_id`, `user_id`, `debt_name`, `lender_name`, `original_amount`, `current_balance`, `interest_rate`, `interest_type`, `payment_frequency`, `start_date`, `due_date`, `minimum_payment`, `debt_priority`, `notes`, `created_at`) VALUES
+(1, 1, 'Car Loan', 'HDFC bank', 1500000.00, 0.00, 15.00, 'Simple', 'Monthly', '2025-08-05', '2025-08-05', 10000.00, 'Medium', '', '2025-08-05 06:14:29'),
+(2, 1, 'Car Loan', 'HDFC bank', 1500000.00, 1480000.00, 10.00, 'Simple', 'Monthly', '2025-08-05', '2025-09-05', 10000.00, 'High', '', '2025-08-05 06:24:05'),
+(3, 1, 'phone', 'Ravi', 45000.00, 45000.00, 5.00, 'Simple', 'Monthly', '2025-08-05', '2025-09-05', 5000.00, 'High', '', '2025-08-05 06:26:25'),
+(4, 1, 'TV', 'friend', 32000.00, 32000.00, 7.00, 'Compound', 'Weekly', '2025-08-05', '2026-04-09', 5000.00, 'High', '', '2025-08-05 06:29:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `debt_payments`
+--
+
+CREATE TABLE `debt_payments` (
+  `payment_id` int(11) NOT NULL,
+  `debt_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `payment_amount` decimal(15,2) NOT NULL,
+  `payment_date` date NOT NULL,
+  `payment_type` enum('Regular','Extra','Lump Sum') DEFAULT 'Regular',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `debt_payments`
+--
+
+INSERT INTO `debt_payments` (`payment_id`, `debt_id`, `user_id`, `payment_amount`, `payment_date`, `payment_type`, `notes`, `created_at`) VALUES
+(1, 1, 1, 10000.00, '2025-08-05', 'Regular', '', '2025-08-05 06:22:55'),
+(2, 2, 1, 20000.00, '2025-08-05', 'Regular', '', '2025-08-05 06:24:38');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -19154,10 +19213,41 @@ ALTER TABLE `data`
   ADD KEY `FKforTable2` (`id`);
 
 --
+-- Indexes for table `debts`
+--
+ALTER TABLE `debts`
+  ADD PRIMARY KEY (`debt_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `debt_payments`
+--
+ALTER TABLE `debt_payments`
+  ADD PRIMARY KEY (`payment_id`),
+  ADD KEY `debt_id` (`debt_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `debts`
+--
+ALTER TABLE `debts`
+  MODIFY `debt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `debt_payments`
+--
+ALTER TABLE `debt_payments`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -19168,6 +19258,19 @@ ALTER TABLE `users`
 --
 ALTER TABLE `data`
   ADD CONSTRAINT `FKforTable2` FOREIGN KEY (`id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `debts`
+--
+ALTER TABLE `debts`
+  ADD CONSTRAINT `debts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `debt_payments`
+--
+ALTER TABLE `debt_payments`
+  ADD CONSTRAINT `debt_payments_ibfk_1` FOREIGN KEY (`debt_id`) REFERENCES `debts` (`debt_id`),
+  ADD CONSTRAINT `debt_payments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
