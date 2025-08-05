@@ -363,12 +363,20 @@ def advanced_analytics_page():
     st.markdown(f'<h1 class="main-header">📊 Advanced Analytics - {st.session_state.user_name}</h1>', unsafe_allow_html=True)
     
     # Navigation
-    col1, col2, col3 = st.columns([1, 3, 1])
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
     with col1:
         if st.button("🏠 Dashboard"):
             st.session_state.current_page = "dashboard"
             st.rerun()
+    with col2:
+        if st.button("💰 Add Transaction"):
+            st.session_state.current_page = "transaction"
+            st.rerun()
     with col3:
+        if st.button("🤖 AI Chatbot"):
+            st.session_state.current_page = "chatbot"
+            st.rerun()
+    with col4:
         if st.button("🚪 Logout"):
             st.session_state.authenticated = False
             st.session_state.user_id = None
@@ -603,60 +611,255 @@ def advanced_analytics_page():
             }
         )
 
+def validate_email(email):
+    """Basic email validation"""
+    import re
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
+def validate_phone(phone):
+    """Basic phone number validation"""
+    import re
+    # Remove all non-digit characters
+    digits_only = re.sub(r'\D', '', phone)
+    # Check if it's between 10-15 digits
+    return 10 <= len(digits_only) <= 15
+
+def get_next_user_id():
+    """Get the next available user ID by counting existing users"""
+    connection = get_mysql_connection()
+    if connection is None:
+        return 1
+    
+    try:
+        cursor = connection.cursor()
+        cursor.execute('SELECT COUNT(*) FROM Users')
+        count = cursor.fetchone()[0]
+        cursor.close()
+        connection.close()
+        return count + 1
+    except Error as e:
+        st.error(f"Error getting user count: {e}")
+        connection.close()
+        return 1
+
+def check_email_exists(email):
+    """Check if email already exists in the database"""
+    connection = get_mysql_connection()
+    if connection is None:
+        return False
+    
+    try:
+        cursor = connection.cursor()
+        cursor.execute('SELECT COUNT(*) FROM Users WHERE email = %s', (email,))
+        count = cursor.fetchone()[0]
+        cursor.close()
+        connection.close()
+        return count > 0
+    except Error as e:
+        st.error(f"Error checking email: {e}")
+        connection.close()
+        return False
+
+def register_user(name, age, email, password, phone_number):
+    """Register a new user in the database"""
+    connection = get_mysql_connection()
+    if connection is None:
+        return False
+    
+    try:
+        # Get next user ID
+        next_user_id = get_next_user_id()
+        
+        cursor = connection.cursor()
+        cursor.execute('''
+            INSERT INTO Users (user_id, Name, Age, email, password, phone_number)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        ''', (next_user_id, name, age, email, password, phone_number))
+        
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return True
+    except Error as e:
+        st.error(f"Error registering user: {e}")
+        connection.close()
+        return False
+
 def login_page():
-    """Display login page"""
+    """Display login page with signup option"""
     st.markdown('<h1 class="main-header">💰 Dabba Expense Tracker</h1>', unsafe_allow_html=True)
     
-    with st.container():
-        st.markdown('<div class="login-container">', unsafe_allow_html=True)
-        
-        st.markdown("### 🔐 Login to Your Account")
-        
-        with st.form("login_form"):
-            email = st.text_input("📧 Email", placeholder="Enter your email")
-            password = st.text_input("🔑 Password", type="password", placeholder="Enter your password")
+    # Create tabs for login and signup
+    tab1, tab2 = st.tabs(["🔐 Login", "📝 Sign Up"])
+    
+    with tab1:
+        with st.container():
+            st.markdown('<div class="login-container">', unsafe_allow_html=True)
             
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
-                submit_button = st.form_submit_button("🚀 Login", use_container_width=True)
+            st.markdown("### 🔐 Login to Your Account")
             
-            if submit_button:
-                if email and password:
-                    user = authenticate_user(email, password)
-                    if user:
-                        st.session_state.authenticated = True
-                        st.session_state.user_id = user[0]
-                        st.session_state.user_name = user[1]
-                        st.success("✅ Login successful! Welcome back!")
-                        st.rerun()
+            with st.form("login_form"):
+                email = st.text_input("📧 Email", placeholder="Enter your email")
+                password = st.text_input("🔑 Password", type="password", placeholder="Enter your password")
+                
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    submit_button = st.form_submit_button("🚀 Login", use_container_width=True)
+                
+                if submit_button:
+                    if email and password:
+                        user = authenticate_user(email, password)
+                        if user:
+                            st.session_state.authenticated = True
+                            st.session_state.user_id = user[0]
+                            st.session_state.user_name = user[1]
+                            st.success("✅ Login successful! Welcome back!")
+                            st.rerun()
+                        else:
+                            st.error("❌ Invalid email or password. Please try again.")
                     else:
-                        st.error("❌ Invalid email or password. Please try again.")
-                else:
-                    st.error("❌ Please fill in all fields.")
-        
-        st.markdown("---")
-        st.markdown("### 📋 Demo Accounts")
-        st.markdown("You can use any of these accounts to test the application:")
-        
-        demo_accounts = [
-            ("himnish@gmail.com", "himnish@123"),
-            ("rishi@gmail.com", "rishi@123"),
-            ("surya@gmail.com", "surya@123"),
-            ("sandeep@gmail.com", "sandeep@123"),
-            ("shaura@gmail.com", "shaura@123")
-        ]
-        
-        for email, password in demo_accounts:
-            st.code(f"Email: {email} | Password: {password}")
-        
-        st.markdown("</div>", unsafe_allow_html=True)
+                        st.error("❌ Please fill in all fields.")
+            
+            st.markdown("---")
+            st.markdown("### 📋 Demo Accounts")
+            st.markdown("You can use any of these accounts to test the application:")
+            
+            demo_accounts = [
+                ("himnish@gmail.com", "himnish@123"),
+                ("rishi@gmail.com", "rishi@123"),
+                ("surya@gmail.com", "surya@123"),
+                ("sandeep@gmail.com", "sandeep@123"),
+                ("shaura@gmail.com", "shaura@123")
+            ]
+            
+            for email, password in demo_accounts:
+                st.code(f"Email: {email} | Password: {password}")
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+    
+    with tab2:
+        with st.container():
+            st.markdown('<div class="login-container">', unsafe_allow_html=True)
+            
+            st.markdown("### 📝 Create New Account")
+            st.markdown("Join Dabba Expense Tracker to start managing your finances!")
+            
+            with st.form("signup_form"):
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    name = st.text_input("👤 Full Name", placeholder="Enter your full name")
+                    age = st.number_input("🎂 Age", min_value=13, max_value=120, value=20)
+                    email = st.text_input("📧 Email", placeholder="Enter your email address")
+                
+                with col2:
+                    password = st.text_input("🔑 Password", type="password", placeholder="Create a password (min 6 characters)")
+                    confirm_password = st.text_input("🔒 Confirm Password", type="password", placeholder="Confirm your password")
+                    phone_number = st.text_input("📱 Phone Number", placeholder="Enter your phone number")
+                
+                # Password strength indicator
+                if password:
+                    strength = 0
+                    if len(password) >= 6:
+                        strength += 1
+                    if any(c.isupper() for c in password):
+                        strength += 1
+                    if any(c.islower() for c in password):
+                        strength += 1
+                    if any(c.isdigit() for c in password):
+                        strength += 1
+                    if any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in password):
+                        strength += 1
+                    
+                    strength_labels = ["Very Weak", "Weak", "Fair", "Good", "Strong"]
+                    strength_colors = ["red", "orange", "yellow", "lightgreen", "green"]
+                    
+                    if strength > 0:
+                        st.markdown(f"**Password Strength:** <span style='color: {strength_colors[strength-1]}'>{strength_labels[strength-1]}</span>", unsafe_allow_html=True)
+                
+                # Terms and conditions
+                agree_terms = st.checkbox("I agree to the Terms and Conditions")
+                
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    signup_button = st.form_submit_button("📝 Create Account", use_container_width=True)
+                
+                if signup_button:
+                    # Validate inputs
+                    if not name or not email or not password or not confirm_password or not phone_number:
+                        st.error("❌ Please fill in all required fields.")
+                    elif len(name.strip()) < 2:
+                        st.error("❌ Name must be at least 2 characters long.")
+                    elif not validate_email(email):
+                        st.error("❌ Please enter a valid email address.")
+                    elif password != confirm_password:
+                        st.error("❌ Passwords do not match. Please try again.")
+                    elif len(password) < 6:
+                        st.error("❌ Password must be at least 6 characters long.")
+                    elif not validate_phone(phone_number):
+                        st.error("❌ Please enter a valid phone number (10-15 digits).")
+                    elif not agree_terms:
+                        st.error("❌ Please agree to the Terms and Conditions.")
+                    elif check_email_exists(email):
+                        st.error("❌ Email already exists. Please use a different email or login.")
+                    else:
+                        # Register the user
+                        success = register_user(name.strip(), age, email.lower(), password, phone_number)
+                        if success:
+                            st.success("✅ Account created successfully! You can now login.")
+                            st.balloons()
+                            
+                            # Show account details
+                            st.markdown("### 📋 Account Details")
+                            col1, col2 = st.columns(2)
+                            with col1:
+                                st.metric("👤 Name", name.strip())
+                                st.metric("📧 Email", email.lower())
+                                st.metric("📱 Phone", phone_number)
+                            with col2:
+                                st.metric("🎂 Age", age)
+                                st.metric("🆔 User ID", get_next_user_id() - 1)
+                                st.metric("📅 Status", "Active")
+                            
+                            st.info("💡 You can now login with your email and password!")
+                        else:
+                            st.error("❌ Failed to create account. Please try again.")
+            
+            st.markdown("---")
+            st.markdown("### 💡 Account Benefits")
+            benefits = [
+                "💰 Track your income and expenses",
+                "📊 View detailed financial analytics",
+                "🤖 Get AI-powered financial advice",
+                "📈 Monitor spending patterns",
+                "🎯 Set and achieve financial goals"
+            ]
+            
+            for benefit in benefits:
+                st.markdown(f"• {benefit}")
+            
+            st.markdown("---")
+            st.markdown("### 📋 Signup Tips")
+            tips = [
+                "✅ Use a strong password with letters, numbers, and symbols",
+                "✅ Enter a valid email address you can access",
+                "✅ Provide your real phone number for account security",
+                "✅ Make sure you're at least 13 years old to register",
+                "✅ Read and agree to our Terms and Conditions"
+            ]
+            
+            for tip in tips:
+                st.markdown(f"• {tip}")
+            
+            st.markdown("</div>", unsafe_allow_html=True)
 
 def dashboard():
     """Display main dashboard after login"""
     st.markdown(f'<h1 class="main-header">💰 Welcome, {st.session_state.user_name}! 👋</h1>', unsafe_allow_html=True)
     
     # Navigation
-    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+    col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
     with col1:
         if st.button("📊 Advanced Analytics"):
             st.session_state.current_page = "analytics"
@@ -665,7 +868,11 @@ def dashboard():
         if st.button("🤖 AI Chatbot"):
             st.session_state.current_page = "chatbot"
             st.rerun()
-    with col4:
+    with col3:
+        if st.button("💰 Add Transaction"):
+            st.session_state.current_page = "transaction"
+            st.rerun()
+    with col5:
         if st.button("🚪 Logout"):
             st.session_state.authenticated = False
             st.session_state.user_id = None
@@ -794,6 +1001,301 @@ def dashboard():
         else:
             st.info("No payment method data available.")
 
+def insert_transaction(user_id, date, mode, category, amount, income_expense, currency):
+    """Insert a new transaction into the MySQL database"""
+    connection = get_mysql_connection()
+    if connection is None:
+        return False
+    
+    try:
+        cursor = connection.cursor()
+        cursor.execute('''
+            INSERT INTO Data (id, Date, Mode, Category, Amount, income_expense, Currency)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ''', (user_id, date, mode, category, amount, income_expense, currency))
+        
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return True
+    except Error as e:
+        st.error(f"Error inserting transaction: {e}")
+        connection.close()
+        return False
+
+def get_available_categories():
+    """Get list of available categories from existing data"""
+    connection = get_mysql_connection()
+    if connection is None:
+        return []
+    
+    try:
+        cursor = connection.cursor()
+        cursor.execute('''
+            SELECT DISTINCT Category 
+            FROM Data 
+            ORDER BY Category
+        ''')
+        categories = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        connection.close()
+        return categories
+    except Error as e:
+        st.error(f"Error fetching categories: {e}")
+        connection.close()
+        return []
+
+def get_available_modes():
+    """Get list of available payment modes from existing data"""
+    connection = get_mysql_connection()
+    if connection is None:
+        return []
+    
+    try:
+        cursor = connection.cursor()
+        cursor.execute('''
+            SELECT DISTINCT Mode 
+            FROM Data 
+            ORDER BY Mode
+        ''')
+        modes = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        connection.close()
+        return modes
+    except Error as e:
+        st.error(f"Error fetching payment modes: {e}")
+        connection.close()
+        return []
+
+def transaction_page():
+    """Display the transaction insertion page"""
+    st.markdown(f'<h1 class="main-header">💰 Add New Transaction - {st.session_state.user_name}</h1>', unsafe_allow_html=True)
+    
+    # Navigation
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+    with col1:
+        if st.button("🏠 Dashboard"):
+            st.session_state.current_page = "dashboard"
+            st.rerun()
+    with col2:
+        if st.button("📊 Advanced Analytics"):
+            st.session_state.current_page = "analytics"
+            st.rerun()
+    with col3:
+        if st.button("🤖 AI Chatbot"):
+            st.session_state.current_page = "chatbot"
+            st.rerun()
+    with col4:
+        if st.button("🚪 Logout"):
+            st.session_state.authenticated = False
+            st.session_state.user_id = None
+            st.session_state.user_name = None
+            st.rerun()
+    
+    # Get available categories and modes
+    available_categories = get_available_categories()
+    available_modes = get_available_modes()
+    
+    # Default options
+    default_categories = [
+        "Food", "Travel", "Shopping", "College", "Transfer", "Entertainment", 
+        "Stationery", "Electronics", "Product", "Grocery", "Clothes", "Other",
+        "Laundry", "Delivery", "Cricket", "Rapido", "Bus", "Metro", "Highway",
+        "Salon", "Railways", "Recharge", "Medicine", "Sports", "Amazon",
+        "IRCTC", "Neelkanta", "Boutique", "General store", "Hospital",
+        "Vegetables", "Kirana", "Swayam", "Salary", "Freelance", "Investment",
+        "Gifts", "Health", "Utilities"
+    ]
+    
+    default_modes = [
+        "UPI", "Cash", "Debit Card", "Credit Card", "Bank Transfer"
+    ]
+    
+    # Combine existing and default options
+    all_categories = list(set(available_categories + default_categories))
+    all_modes = list(set(available_modes + default_modes))
+    
+    # Sort for better UX
+    all_categories.sort()
+    all_modes.sort()
+    
+    st.markdown("### 📝 Add New Transaction")
+    
+    # Transaction form
+    with st.form("transaction_form"):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Date picker
+            transaction_date = st.date_input(
+                "📅 Transaction Date",
+                value=datetime.now().date(),
+                max_value=datetime.now().date()
+            )
+            
+            # Amount input
+            amount = st.number_input(
+                "💰 Amount (₹)",
+                min_value=0.01,
+                max_value=1000000.00,
+                value=100.00,
+                step=0.01,
+                format="%.2f"
+            )
+            
+            # Transaction type
+            transaction_type = st.selectbox(
+                "📊 Transaction Type",
+                options=["Expense", "Income"],
+                index=0
+            )
+        
+        with col2:
+            # Payment mode
+            payment_mode = st.selectbox(
+                "💳 Payment Mode",
+                options=all_modes,
+                index=0
+            )
+            
+            # Category
+            category = st.selectbox(
+                "🏷️ Category",
+                options=all_categories,
+                index=0
+            )
+            
+            # Currency (default to INR)
+            currency = st.selectbox(
+                "💱 Currency",
+                options=["INR", "USD", "EUR", "GBP"],
+                index=0
+            )
+        
+        # Custom category input
+        st.markdown("**Or enter a custom category:**")
+        custom_category = st.text_input(
+            "🏷️ Custom Category (optional)",
+            placeholder="Enter custom category if not in the list above"
+        )
+        
+        # Submit button
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            submit_button = st.form_submit_button("💾 Save Transaction", use_container_width=True)
+        
+        if submit_button:
+            # Validate inputs
+            if not transaction_date:
+                st.error("❌ Please select a transaction date.")
+            elif amount <= 0:
+                st.error("❌ Amount must be greater than 0.")
+            elif not payment_mode:
+                st.error("❌ Please select a payment mode.")
+            elif not category and not custom_category:
+                st.error("❌ Please select a category or enter a custom one.")
+            else:
+                # Use custom category if provided, otherwise use selected category
+                final_category = custom_category if custom_category else category
+                
+                # Insert transaction
+                success = insert_transaction(
+                    st.session_state.user_id,
+                    transaction_date,
+                    payment_mode,
+                    final_category,
+                    amount,
+                    transaction_type,
+                    currency
+                )
+                
+                if success:
+                    st.success(f"✅ Transaction added successfully!")
+                    st.balloons()
+                    
+                    # Show transaction summary
+                    st.markdown("### 📋 Transaction Summary")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Date", transaction_date.strftime("%Y-%m-%d"))
+                        st.metric("Amount", f"₹{amount:,.2f}")
+                        st.metric("Type", transaction_type)
+                    with col2:
+                        st.metric("Payment Mode", payment_mode)
+                        st.metric("Category", final_category)
+                        st.metric("Currency", currency)
+                    
+                    # Show updated financial summary
+                    st.markdown("### 📊 Updated Financial Summary")
+                    updated_summary = get_user_summary(st.session_state.user_id)
+                    if updated_summary:
+                        col1, col2, col3, col4 = st.columns(4)
+                        with col1:
+                            st.metric("💰 Total Income", f"₹{updated_summary['total_income']:,.0f}")
+                        with col2:
+                            st.metric("💸 Total Expenses", f"₹{updated_summary['total_expenses']:,.0f}")
+                        with col3:
+                            st.metric("📊 Net Balance", f"₹{updated_summary['net_balance']:,.0f}")
+                        with col4:
+                            st.metric("📅 Total Transactions", updated_summary['transaction_count'])
+                else:
+                    st.error("❌ Failed to add transaction. Please try again.")
+    
+    # Recent transactions for reference
+    st.markdown("### 📋 Your Recent Transactions")
+    recent_data = get_user_data(st.session_state.user_id)
+    if not recent_data.empty:
+        st.dataframe(
+            recent_data.head(10), 
+            use_container_width=True,
+            column_config={
+                "Date": st.column_config.DateColumn("Date"),
+                "Amount": st.column_config.NumberColumn("Amount (₹)", format="₹%.2f"),
+                "income_expense": st.column_config.SelectboxColumn("Type", options=["Income", "Expense"])
+            }
+        )
+    else:
+        st.info("💡 No transactions found. Add your first transaction above!")
+    
+    # Popular categories and payment modes
+    st.markdown("### 📈 Your Most Used Categories & Payment Modes")
+    
+    # Get user's most used categories and payment modes
+    user_data = get_user_data(st.session_state.user_id)
+    if not user_data.empty:
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**🏷️ Your Top Categories**")
+            category_counts = user_data['Category'].value_counts().head(5)
+            if not category_counts.empty:
+                for category, count in category_counts.items():
+                    st.markdown(f"• **{category}**: {count} transactions")
+            else:
+                st.info("No category data available yet.")
+        
+        with col2:
+            st.markdown("**💳 Your Payment Methods**")
+            mode_counts = user_data['Mode'].value_counts().head(5)
+            if not mode_counts.empty:
+                for mode, count in mode_counts.items():
+                    st.markdown(f"• **{mode}**: {count} transactions")
+            else:
+                st.info("No payment method data available yet.")
+    
+    # Quick tips
+    st.markdown("### 💡 Quick Tips")
+    tips = [
+        "💡 Use specific categories to better track your spending patterns",
+        "💡 Regular transactions help build better financial insights",
+        "💡 You can add custom categories for unique expenses",
+        "💡 All transactions are automatically linked to your account",
+        "💡 Check the dashboard to see your updated financial summary"
+    ]
+    
+    for tip in tips:
+        st.markdown(tip)
+
 # Grok AI API Configuration
 GROK_API_KEY = st.secrets.get("GROK_API_KEY", "your-grok-api-key-here")
 GROK_API_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -804,28 +1306,28 @@ def call_grok_api(user_query, context_data):
         # Prepare the context with user data
         context = f"""
         You are a financial advisor chatbot for the Dabba expense tracker app. 
-        You have access to the following user data:
+        Provide responses between 2-6 sentences - not too short, not too long.
         
-        User Summary:
-        - Total Income: ₹{context_data.get('total_income', 0):,.0f}
-        - Total Expenses: ₹{context_data.get('total_expenses', 0):,.0f}
-        - Net Balance: ₹{context_data.get('net_balance', 0):,.0f}
-        - Total Transactions: {context_data.get('transaction_count', 0)}
+        User Data:
+        - Income: ₹{context_data.get('total_income', 0):,.0f}
+        - Expenses: ₹{context_data.get('total_expenses', 0):,.0f}
+        - Net: ₹{context_data.get('net_balance', 0):,.0f}
+        - Transactions: {context_data.get('transaction_count', 0)}
         
-        Category Breakdown:
-        {context_data.get('category_data', pd.DataFrame()).to_string() if not context_data.get('category_data', pd.DataFrame()).empty else 'No category data available'}
+        Top Categories: {context_data.get('category_data', pd.DataFrame()).head(3).to_string() if not context_data.get('category_data', pd.DataFrame()).empty else 'None'}
         
-        Recent Transactions:
-        {context_data.get('recent_data', pd.DataFrame()).to_string() if not context_data.get('recent_data', pd.DataFrame()).empty else 'No recent transactions'}
+        Recent: {context_data.get('recent_data', pd.DataFrame()).head(3).to_string() if not context_data.get('recent_data', pd.DataFrame()).empty else 'None'}
         
-        Payment Methods:
-        {context_data.get('payment_data', pd.DataFrame()).to_string() if not context_data.get('payment_data', pd.DataFrame()).empty else 'No payment data available'}
+        Query: {user_query}
         
-        User Query: {user_query}
-        
-        Please provide a helpful, personalized response based on the user's financial data. 
-        Be conversational, provide insights, and suggest improvements where appropriate.
-        Only use the user's own data - do not reference other users' data.
+        RESPONSE RULES:
+        - Keep responses between 2-6 sentences (not too short, not too long)
+        - Be DIRECT and TO-THE-POINT
+        - Use bullet points for multiple points
+        - Focus on actionable advice
+        - Use specific numbers from user data
+        - Provide context and explanation
+        - Include practical suggestions
         """
         
         headers = {
@@ -838,15 +1340,15 @@ def call_grok_api(user_query, context_data):
             "messages": [
                 {
                     "role": "system",
-                    "content": "You are a helpful financial advisor chatbot for the Dabba expense tracker app. Provide personalized financial insights and advice based on the user's data."
+                    "content": "You are a helpful financial advisor. Provide responses between 2-6 sentences - not too short, not too long. Be direct and to-the-point while providing context and practical suggestions. Use bullet points when needed. Focus on actionable insights and specific data from the user's financial records."
                 },
                 {
                     "role": "user",
                     "content": context
                 }
             ],
-            "temperature": 0.7,
-            "max_tokens": 1000
+            "temperature": 0.3,  # Lower temperature for more focused responses
+            "max_tokens": 500    # Increased max tokens for 2-6 sentence responses
         }
         
         response = requests.post(GROK_API_URL, headers=headers, json=payload)
@@ -927,12 +1429,61 @@ def get_analytics_data_for_chatbot(user_id):
         st.error(f"Error fetching analytics data: {e}")
         return {}
 
+def get_quick_response(user_query, context_data):
+    """Provide quick template-based responses for common questions"""
+    query_lower = user_query.lower()
+    
+    # Income vs expenses comparison
+    if any(word in query_lower for word in ['income', 'expense', 'compare', 'balance']):
+        net_balance = context_data.get('net_balance', 0)
+        if net_balance > 0:
+            return f"✅ You're in good shape! Net balance: ₹{net_balance:,.0f} (Income exceeds expenses). Your financial health is positive, which means you're saving money effectively. Consider investing the surplus for better returns."
+        elif net_balance < 0:
+            return f"⚠️ Watch your spending! Net balance: ₹{net_balance:,.0f} (Expenses exceed income). You're spending more than you earn, which can lead to financial stress. Focus on reducing expenses in your top spending categories to improve your financial situation."
+        else:
+            return "📊 Your income and expenses are perfectly balanced. This is a stable financial position, but you might want to consider increasing your income or reducing expenses to build savings. Aim for a positive net balance for better financial security."
+    
+    # Top spending categories
+    elif any(word in query_lower for word in ['category', 'spending', 'biggest', 'top']):
+        category_data = context_data.get('category_data', pd.DataFrame())
+        if not category_data.empty:
+            top_cat = category_data.iloc[0]
+            return f"🏆 Top category: {top_cat['Category']} (₹{top_cat['TotalAmount']:,.0f}). This represents your highest spending area, accounting for {top_cat['TransactionCount']} transactions. Consider reviewing this category for potential savings opportunities and setting a budget limit."
+        return "📊 No spending data available yet. Start adding transactions to see your spending patterns and get personalized insights. This will help you identify areas where you can optimize your expenses."
+    
+    # Recent transactions
+    elif any(word in query_lower for word in ['recent', 'latest', 'transactions']):
+        recent_data = context_data.get('recent_data', pd.DataFrame())
+        if not recent_data.empty:
+            latest = recent_data.iloc[0]
+            return f"📅 Latest: {latest['Category']} - ₹{latest['Amount']:,.0f} ({latest['income_expense']}). Your recent spending shows a {latest['income_expense'].lower()} transaction. Monitor your recent patterns to maintain financial discipline and avoid unnecessary expenses."
+        return "📅 No recent transactions found. Add your daily expenses and income to track your financial activity. Regular transaction logging helps you stay aware of your spending habits and financial goals."
+    
+    # Savings advice
+    elif any(word in query_lower for word in ['save', 'savings', 'improve']):
+        net_balance = context_data.get('net_balance', 0)
+        if net_balance < 0:
+            return "💡 Cut expenses in your top spending category to improve savings. Your current spending exceeds income, so prioritize reducing non-essential expenses. Consider creating a budget and tracking every expense to identify areas for improvement."
+        else:
+            return "💡 Great job! Consider increasing your savings rate. You're already saving money, which is excellent. Look into investment options or emergency funds to make your money work harder for you."
+    
+    # Payment methods
+    elif any(word in query_lower for word in ['payment', 'method', 'mode']):
+        payment_data = context_data.get('payment_data', pd.DataFrame())
+        if not payment_data.empty:
+            top_payment = payment_data.iloc[0]
+            return f"💳 Most used: {top_payment['Mode']} ({top_payment['TransactionCount']} transactions). This is your preferred payment method, indicating your comfort with digital transactions. Consider diversifying payment methods for better financial tracking and security."
+        return "💳 No payment data available. Start recording your transactions to see which payment methods you use most. This information helps in better financial planning and understanding your spending patterns."
+    
+    # Return None to use AI response
+    return None
+
 def chatbot_page():
     """Display the chatbot interface"""
     st.markdown('<h1 class="main-header">🤖 Dabba Financial Advisor Chatbot</h1>', unsafe_allow_html=True)
     
     # Navigation
-    col1, col2, col3 = st.columns([1, 3, 1])
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
     with col1:
         if st.button("🏠 Dashboard"):
             st.session_state.current_page = "dashboard"
@@ -942,6 +1493,10 @@ def chatbot_page():
             st.session_state.current_page = "analytics"
             st.rerun()
     with col3:
+        if st.button("💰 Add Transaction"):
+            st.session_state.current_page = "transaction"
+            st.rerun()
+    with col4:
         if st.button("🚪 Logout"):
             st.session_state.authenticated = False
             st.session_state.user_id = None
@@ -1014,8 +1569,14 @@ def chatbot_page():
         
         # Show loading message
         with st.spinner("🤖 Analyzing your financial data..."):
-            # Call Grok API
-            response = call_grok_api(user_input, context_data)
+            # Try quick response first
+            quick_response = get_quick_response(user_input, context_data)
+            
+            if quick_response:
+                response = quick_response
+            else:
+                # Call Grok API for complex questions
+                response = call_grok_api(user_input, context_data)
             
             # Add bot response to chat history
             st.session_state.chat_history.append({'role': 'assistant', 'content': response})
@@ -1029,16 +1590,16 @@ def chatbot_page():
         st.rerun()
     
     # Suggested questions
-    st.markdown("### 💡 Suggested Questions:")
+    st.markdown("### 💡 Quick Questions:")
     suggested_questions = [
-        "What are my biggest spending categories?",
-        "How can I improve my savings?",
-        "What's my spending trend over the last few months?",
-        "Which payment method do I use most?",
-        "What are my recent transactions?",
-        "How does my income compare to my expenses?",
-        "What financial advice do you have for me?",
-        "How can I reduce my expenses?"
+        "What's my net balance?",
+        "Top spending category?",
+        "Recent transactions?",
+        "Payment method used most?",
+        "How to improve savings?",
+        "Income vs expenses?",
+        "Financial advice?",
+        "Reduce expenses?"
     ]
     
     cols = st.columns(2)
@@ -1104,6 +1665,8 @@ def main():
             advanced_analytics_page()
         elif st.session_state.current_page == "chatbot":
             chatbot_page()
+        elif st.session_state.current_page == "transaction":
+            transaction_page()
         else:
             dashboard()
 

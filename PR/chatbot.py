@@ -163,28 +163,28 @@ def call_grok_api(user_query, context_data):
         # Prepare the context with user data
         context = f"""
         You are a financial advisor chatbot for the Dabba expense tracker app. 
-        You have access to the following user data:
+        Provide responses between 2-6 sentences - not too short, not too long.
         
-        User Summary:
-        - Total Income: ₹{context_data.get('total_income', 0):,.0f}
-        - Total Expenses: ₹{context_data.get('total_expenses', 0):,.0f}
-        - Net Balance: ₹{context_data.get('net_balance', 0):,.0f}
-        - Total Transactions: {context_data.get('transaction_count', 0)}
+        User Data:
+        - Income: ₹{context_data.get('total_income', 0):,.0f}
+        - Expenses: ₹{context_data.get('total_expenses', 0):,.0f}
+        - Net: ₹{context_data.get('net_balance', 0):,.0f}
+        - Transactions: {context_data.get('transaction_count', 0)}
         
-        Category Breakdown:
-        {context_data.get('category_data', pd.DataFrame()).to_string() if not context_data.get('category_data', pd.DataFrame()).empty else 'No category data available'}
+        Top Categories: {context_data.get('category_data', pd.DataFrame()).head(3).to_string() if not context_data.get('category_data', pd.DataFrame()).empty else 'None'}
         
-        Recent Transactions:
-        {context_data.get('recent_data', pd.DataFrame()).to_string() if not context_data.get('recent_data', pd.DataFrame()).empty else 'No recent transactions'}
+        Recent: {context_data.get('recent_data', pd.DataFrame()).head(3).to_string() if not context_data.get('recent_data', pd.DataFrame()).empty else 'None'}
         
-        Payment Methods:
-        {context_data.get('payment_data', pd.DataFrame()).to_string() if not context_data.get('payment_data', pd.DataFrame()).empty else 'No payment data available'}
+        Query: {user_query}
         
-        User Query: {user_query}
-        
-        Please provide a helpful, personalized response based on the user's financial data. 
-        Be conversational, provide insights, and suggest improvements where appropriate.
-        Only use the user's own data - do not reference other users' data.
+        RESPONSE RULES:
+        - Keep responses between 2-6 sentences (not too short, not too long)
+        - Be DIRECT and TO-THE-POINT
+        - Use bullet points for multiple points
+        - Focus on actionable advice
+        - Use specific numbers from user data
+        - Provide context and explanation
+        - Include practical suggestions
         """
         
         headers = {
@@ -197,15 +197,15 @@ def call_grok_api(user_query, context_data):
             "messages": [
                 {
                     "role": "system",
-                    "content": "You are a helpful financial advisor chatbot for the Dabba expense tracker app. Provide personalized financial insights and advice based on the user's data."
+                    "content": "You are a helpful financial advisor. Provide responses between 2-6 sentences - not too short, not too long. Be direct and to-the-point while providing context and practical suggestions. Use bullet points when needed. Focus on actionable insights and specific data from the user's financial records."
                 },
                 {
                     "role": "user",
                     "content": context
                 }
             ],
-            "temperature": 0.7,
-            "max_tokens": 1000
+            "temperature": 0.3,  # Lower temperature for more focused responses
+            "max_tokens": 500    # Increased max tokens for 2-6 sentence responses
         }
         
         response = requests.post(GROK_API_URL, headers=headers, json=payload)
@@ -220,6 +220,55 @@ def call_grok_api(user_query, context_data):
     except Exception as e:
         st.error(f"Error calling Grok API: {e}")
         return "I'm sorry, I'm experiencing technical difficulties. Please try again later."
+
+def get_quick_response(user_query, context_data):
+    """Provide quick template-based responses for common questions"""
+    query_lower = user_query.lower()
+    
+    # Income vs expenses comparison
+    if any(word in query_lower for word in ['income', 'expense', 'compare', 'balance']):
+        net_balance = context_data.get('net_balance', 0)
+        if net_balance > 0:
+            return f"✅ You're in good shape! Net balance: ₹{net_balance:,.0f} (Income exceeds expenses). Your financial health is positive, which means you're saving money effectively. Consider investing the surplus for better returns."
+        elif net_balance < 0:
+            return f"⚠️ Watch your spending! Net balance: ₹{net_balance:,.0f} (Expenses exceed income). You're spending more than you earn, which can lead to financial stress. Focus on reducing expenses in your top spending categories to improve your financial situation."
+        else:
+            return "📊 Your income and expenses are perfectly balanced. This is a stable financial position, but you might want to consider increasing your income or reducing expenses to build savings. Aim for a positive net balance for better financial security."
+    
+    # Top spending categories
+    elif any(word in query_lower for word in ['category', 'spending', 'biggest', 'top']):
+        category_data = context_data.get('category_data', pd.DataFrame())
+        if not category_data.empty:
+            top_cat = category_data.iloc[0]
+            return f"🏆 Top category: {top_cat['Category']} (₹{top_cat['TotalAmount']:,.0f}). This represents your highest spending area, accounting for {top_cat['TransactionCount']} transactions. Consider reviewing this category for potential savings opportunities and setting a budget limit."
+        return "📊 No spending data available yet. Start adding transactions to see your spending patterns and get personalized insights. This will help you identify areas where you can optimize your expenses."
+    
+    # Recent transactions
+    elif any(word in query_lower for word in ['recent', 'latest', 'transactions']):
+        recent_data = context_data.get('recent_data', pd.DataFrame())
+        if not recent_data.empty:
+            latest = recent_data.iloc[0]
+            return f"📅 Latest: {latest['Category']} - ₹{latest['Amount']:,.0f} ({latest['income_expense']}). Your recent spending shows a {latest['income_expense'].lower()} transaction. Monitor your recent patterns to maintain financial discipline and avoid unnecessary expenses."
+        return "📅 No recent transactions found. Add your daily expenses and income to track your financial activity. Regular transaction logging helps you stay aware of your spending habits and financial goals."
+    
+    # Savings advice
+    elif any(word in query_lower for word in ['save', 'savings', 'improve']):
+        net_balance = context_data.get('net_balance', 0)
+        if net_balance < 0:
+            return "💡 Cut expenses in your top spending category to improve savings. Your current spending exceeds income, so prioritize reducing non-essential expenses. Consider creating a budget and tracking every expense to identify areas for improvement."
+        else:
+            return "💡 Great job! Consider increasing your savings rate. You're already saving money, which is excellent. Look into investment options or emergency funds to make your money work harder for you."
+    
+    # Payment methods
+    elif any(word in query_lower for word in ['payment', 'method', 'mode']):
+        payment_data = context_data.get('payment_data', pd.DataFrame())
+        if not payment_data.empty:
+            top_payment = payment_data.iloc[0]
+            return f"💳 Most used: {top_payment['Mode']} ({top_payment['TransactionCount']} transactions). This is your preferred payment method, indicating your comfort with digital transactions. Consider diversifying payment methods for better financial tracking and security."
+        return "💳 No payment data available. Start recording your transactions to see which payment methods you use most. This information helps in better financial planning and understanding your spending patterns."
+    
+    # Return None to use AI response
+    return None
 
 def chatbot_page():
     """Display the chatbot interface"""
@@ -309,8 +358,14 @@ def chatbot_page():
         
         # Show loading message
         with st.spinner("🤖 Analyzing your financial data..."):
-            # Call Grok API
-            response = call_grok_api(user_input, context_data)
+            # Try quick response first
+            quick_response = get_quick_response(user_input, context_data)
+            
+            if quick_response:
+                response = quick_response
+            else:
+                # Call Grok API for complex questions
+                response = call_grok_api(user_input, context_data)
             
             # Add bot response to chat history
             st.session_state.chat_history.append({'role': 'assistant', 'content': response})
@@ -324,16 +379,16 @@ def chatbot_page():
         st.rerun()
     
     # Suggested questions
-    st.markdown("### 💡 Suggested Questions:")
+    st.markdown("### 💡 Quick Questions:")
     suggested_questions = [
-        "What are my biggest spending categories?",
-        "How can I improve my savings?",
-        "What's my spending trend over the last few months?",
-        "Which payment method do I use most?",
-        "What are my recent transactions?",
-        "How does my income compare to my expenses?",
-        "What financial advice do you have for me?",
-        "How can I reduce my expenses?"
+        "What's my net balance?",
+        "Top spending category?",
+        "Recent transactions?",
+        "Payment method used most?",
+        "How to improve savings?",
+        "Income vs expenses?",
+        "Financial advice?",
+        "Reduce expenses?"
     ]
     
     cols = st.columns(2)

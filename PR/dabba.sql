@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307:3307
--- Generation Time: Aug 02, 2025 at 08:13 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: 127.0.0.1
+-- Generation Time: Aug 05, 2025 at 07:08 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,16 +18,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `Dabba`
+-- Database: `dabba`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Data`
+-- Table structure for table `data`
 --
 
-CREATE TABLE `Data` (
+CREATE TABLE `data` (
   `id` int(11) NOT NULL,
   `Date` date NOT NULL,
   `Mode` varchar(50) NOT NULL,
@@ -38,10 +38,10 @@ CREATE TABLE `Data` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `Data`
+-- Dumping data for table `data`
 --
 
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (1, '2025-01-01', 'UPI', 'Food', 10, 'Expense', 'INR'),
 (1, '2025-01-03', 'UPI', 'Travel', 300, 'Expense', 'INR'),
 (1, '2025-01-03', 'UPI', 'Food', 180, 'Expense', 'INR'),
@@ -924,7 +924,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (6, '2025-02-08', 'UPI', 'Transfer', 35, 'Income', 'INR'),
 (6, '2025-02-08', 'UPI', 'Transfer', 660, 'Expense', 'INR'),
 (6, '2025-02-08', 'UPI', 'Transfer', 202, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (6, '2025-02-08', 'UPI', 'Others(grocery)', 10, 'Expense', 'INR'),
 (6, '2025-02-07', 'UPI', 'Food', 50, 'Expense', 'INR'),
 (6, '2025-02-07', 'UPI', 'Food', 20, 'Expense', 'INR'),
@@ -1766,7 +1766,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (9, '2025-03-06', 'UPI', 'Transfer', 40, 'Expense', 'INR'),
 (9, '2025-03-06', 'UPI', 'Transfer', 20, 'Expense', 'INR'),
 (9, '2025-03-06', 'UPI', 'Others(bus)', 550, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (9, '2025-03-06', 'UPI', 'Food', 20, 'Expense', 'INR'),
 (9, '2025-03-06', 'UPI', 'Food', 60, 'Expense', 'INR'),
 (9, '2025-03-06', 'UPI', 'Transfer', 200, 'Income', 'INR'),
@@ -2574,7 +2574,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (13, '2025-02-07', 'Debit Card', 'Investment', 4937, 'Income', 'INR'),
 (13, '2025-03-08', 'Debit Card', 'Travel', 8799, 'Expense', 'INR'),
 (13, '2024-12-30', 'Credit Card', 'Salary', 673, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (13, '2024-11-21', 'Cash', 'Investment', 948, 'Income', 'INR'),
 (13, '2025-01-18', 'Cash', 'Health', 9782, 'Expense', 'INR'),
 (13, '2025-03-15', 'Credit Card', 'Entertainment', 1371, 'Expense', 'INR'),
@@ -3339,7 +3339,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (14, '2025-03-13', 'Debit Card', 'Health', 2424, 'Expense', 'INR'),
 (14, '2025-03-22', 'Cash', 'Entertainment', 9993, 'Expense', 'INR'),
 (14, '2025-01-23', 'Debit Card', 'Freelance', 3635, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (14, '2025-01-09', 'Credit Card', 'Shopping', 8297, 'Expense', 'INR'),
 (14, '2025-02-16', 'Cash', 'Entertainment', 8087, 'Expense', 'INR'),
 (14, '2024-11-24', 'UPI', 'Freelance', 1228, 'Income', 'INR'),
@@ -4105,7 +4105,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (16, '2025-01-20', 'Credit Card', 'Entertainment', 8010, 'Expense', 'INR'),
 (16, '2024-10-19', 'Cash', 'Utilities', 5133, 'Expense', 'INR'),
 (16, '2024-11-23', 'Bank Transfer', 'Investment', 8856, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (16, '2025-02-10', 'Bank Transfer', 'Utilities', 5568, 'Expense', 'INR'),
 (16, '2024-10-13', 'Bank Transfer', 'Freelance', 5422, 'Income', 'INR'),
 (16, '2025-01-26', 'Debit Card', 'Salary', 3388, 'Income', 'INR'),
@@ -4871,7 +4871,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (18, '2025-02-03', 'Credit Card', 'Shopping', 4676, 'Expense', 'INR'),
 (18, '2024-10-05', 'Cash', 'Travel', 7511, 'Expense', 'INR'),
 (18, '2024-11-30', 'Bank Transfer', 'Gifts', 9956, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (18, '2024-12-26', 'Cash', 'Gifts', 7852, 'Income', 'INR'),
 (18, '2025-03-01', 'Bank Transfer', 'Salary', 1298, 'Income', 'INR'),
 (18, '2024-11-07', 'Bank Transfer', 'Investment', 7176, 'Income', 'INR'),
@@ -5634,7 +5634,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (20, '2024-11-21', 'UPI', 'Health', 7654, 'Expense', 'INR'),
 (20, '2025-02-16', 'Bank Transfer', 'Shopping', 2188, 'Expense', 'INR'),
 (20, '2025-02-24', 'Debit Card', 'Entertainment', 2975, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (20, '2025-01-26', 'Cash', 'Food', 2497, 'Expense', 'INR'),
 (20, '2024-11-06', 'Cash', 'Entertainment', 7959, 'Expense', 'INR'),
 (20, '2025-02-25', 'Credit Card', 'Health', 3492, 'Expense', 'INR'),
@@ -6398,7 +6398,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (22, '2024-11-07', 'Debit Card', 'Entertainment', 6974, 'Expense', 'INR'),
 (22, '2024-11-06', 'Credit Card', 'Shopping', 6656, 'Expense', 'INR'),
 (22, '2024-12-27', 'Debit Card', 'Investment', 3137, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (22, '2025-01-22', 'Credit Card', 'Freelance', 303, 'Income', 'INR'),
 (22, '2024-11-21', 'UPI', 'Gifts', 4639, 'Income', 'INR'),
 (22, '2025-01-17', 'Debit Card', 'Shopping', 3348, 'Expense', 'INR'),
@@ -7164,7 +7164,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (24, '2025-01-12', 'Bank Transfer', 'Travel', 3791, 'Expense', 'INR'),
 (24, '2025-01-12', 'Cash', 'Entertainment', 1876, 'Expense', 'INR'),
 (24, '2025-01-05', 'Cash', 'Entertainment', 9545, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (24, '2025-01-11', 'UPI', 'Travel', 8674, 'Expense', 'INR'),
 (24, '2024-12-13', 'Debit Card', 'Salary', 955, 'Income', 'INR'),
 (24, '2025-02-20', 'Cash', 'Health', 3752, 'Expense', 'INR'),
@@ -7931,7 +7931,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (27, '2024-11-23', 'UPI', 'Freelance', 6133, 'Income', 'INR'),
 (27, '2025-01-29', 'Cash', 'Entertainment', 3058, 'Expense', 'INR'),
 (27, '2025-04-02', 'UPI', 'Food', 2126, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (27, '2025-01-16', 'UPI', 'Gifts', 3062, 'Income', 'INR'),
 (27, '2025-01-26', 'Cash', 'Entertainment', 5773, 'Expense', 'INR'),
 (27, '2024-10-11', 'Credit Card', 'Health', 5773, 'Expense', 'INR'),
@@ -8695,7 +8695,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (29, '2024-11-05', 'Debit Card', 'Utilities', 963, 'Expense', 'INR'),
 (29, '2025-02-28', 'Bank Transfer', 'Investment', 1833, 'Income', 'INR'),
 (29, '2025-01-29', 'Cash', 'Food', 6094, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (29, '2025-03-31', 'UPI', 'Gifts', 1785, 'Income', 'INR'),
 (29, '2025-02-25', 'Cash', 'Health', 1430, 'Expense', 'INR'),
 (29, '2025-02-09', 'Cash', 'Gifts', 2697, 'Income', 'INR'),
@@ -9463,7 +9463,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (31, '2024-11-12', 'Credit Card', 'Shopping', 7950, 'Expense', 'INR'),
 (31, '2024-12-12', 'UPI', 'Food', 3900, 'Expense', 'INR'),
 (31, '2024-10-08', 'UPI', 'Gifts', 9704, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (31, '2025-02-19', 'Cash', 'Salary', 3311, 'Income', 'INR'),
 (31, '2025-02-20', 'Debit Card', 'Shopping', 1652, 'Expense', 'INR'),
 (31, '2024-12-25', 'UPI', 'Travel', 9781, 'Expense', 'INR'),
@@ -10229,7 +10229,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (33, '2025-02-02', 'Credit Card', 'Health', 7881, 'Expense', 'INR'),
 (33, '2024-10-19', 'Cash', 'Shopping', 9093, 'Expense', 'INR'),
 (33, '2024-10-24', 'Cash', 'Utilities', 4598, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (33, '2024-11-08', 'Bank Transfer', 'Food', 719, 'Expense', 'INR'),
 (33, '2024-12-22', 'Bank Transfer', 'Gifts', 7406, 'Income', 'INR'),
 (33, '2024-12-24', 'Credit Card', 'Shopping', 8744, 'Expense', 'INR'),
@@ -10993,7 +10993,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (35, '2025-01-08', 'Cash', 'Investment', 6062, 'Income', 'INR'),
 (35, '2024-12-30', 'Credit Card', 'Travel', 3855, 'Expense', 'INR'),
 (35, '2025-02-05', 'UPI', 'Travel', 6470, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (35, '2024-11-22', 'Bank Transfer', 'Freelance', 1375, 'Income', 'INR'),
 (35, '2024-10-20', 'Bank Transfer', 'Freelance', 3096, 'Income', 'INR'),
 (35, '2024-12-14', 'UPI', 'Utilities', 348, 'Expense', 'INR'),
@@ -11761,7 +11761,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (37, '2024-11-20', 'Debit Card', 'Utilities', 8579, 'Expense', 'INR'),
 (37, '2025-04-01', 'Cash', 'Freelance', 5673, 'Income', 'INR'),
 (37, '2024-11-29', 'UPI', 'Entertainment', 1314, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (37, '2024-11-02', 'Bank Transfer', 'Shopping', 5759, 'Expense', 'INR'),
 (37, '2025-02-21', 'UPI', 'Salary', 4409, 'Income', 'INR'),
 (37, '2024-10-20', 'UPI', 'Health', 4309, 'Expense', 'INR'),
@@ -12526,7 +12526,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (40, '2025-01-05', 'Cash', 'Entertainment', 664, 'Expense', 'INR'),
 (40, '2025-03-20', 'UPI', 'Gifts', 4157, 'Income', 'INR'),
 (40, '2025-02-25', 'Cash', 'Shopping', 718, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (40, '2024-10-11', 'Credit Card', 'Gifts', 8742, 'Income', 'INR'),
 (40, '2024-12-01', 'Credit Card', 'Freelance', 2775, 'Income', 'INR'),
 (40, '2025-03-16', 'Credit Card', 'Entertainment', 5543, 'Expense', 'INR'),
@@ -13289,7 +13289,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (41, '2025-03-07', 'Debit Card', 'Food', 1376, 'Expense', 'INR'),
 (41, '2025-01-06', 'Bank Transfer', 'Utilities', 1048, 'Expense', 'INR'),
 (41, '2025-03-08', 'Cash', 'Gifts', 9209, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (41, '2025-03-03', 'Bank Transfer', 'Entertainment', 9708, 'Expense', 'INR'),
 (41, '2024-11-09', 'Cash', 'Health', 478, 'Expense', 'INR'),
 (41, '2024-11-22', 'Credit Card', 'Shopping', 6071, 'Expense', 'INR'),
@@ -14055,7 +14055,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (43, '2025-03-03', 'Cash', 'Shopping', 9263, 'Expense', 'INR'),
 (43, '2024-10-21', 'Bank Transfer', 'Food', 3173, 'Expense', 'INR'),
 (43, '2024-11-21', 'Cash', 'Travel', 7845, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (43, '2024-12-23', 'UPI', 'Salary', 1146, 'Income', 'INR'),
 (43, '2025-02-16', 'Debit Card', 'Health', 6720, 'Expense', 'INR'),
 (43, '2024-10-24', 'Cash', 'Entertainment', 8936, 'Expense', 'INR'),
@@ -14819,7 +14819,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (45, '2024-12-11', 'UPI', 'Shopping', 6393, 'Expense', 'INR'),
 (45, '2025-01-05', 'Credit Card', 'Salary', 2556, 'Income', 'INR'),
 (45, '2025-01-19', 'UPI', 'Utilities', 9606, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (45, '2025-02-21', 'UPI', 'Shopping', 767, 'Expense', 'INR'),
 (45, '2024-12-28', 'Credit Card', 'Gifts', 2914, 'Income', 'INR'),
 (45, '2024-11-16', 'Debit Card', 'Health', 4242, 'Expense', 'INR'),
@@ -15582,7 +15582,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (30, '2025-02-01', 'UPI', 'Salary', 9744, 'Income', 'INR'),
 (30, '2024-10-27', 'Debit Card', 'Shopping', 6700, 'Expense', 'INR'),
 (30, '2025-03-09', 'Bank Transfer', 'Freelance', 2435, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (30, '2025-03-07', 'Debit Card', 'Utilities', 9497, 'Expense', 'INR'),
 (30, '2025-01-19', 'Credit Card', 'Food', 868, 'Expense', 'INR'),
 (30, '2025-03-21', 'Bank Transfer', 'Freelance', 5045, 'Income', 'INR'),
@@ -16347,7 +16347,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (49, '2025-03-08', 'Bank Transfer', 'Utilities', 2764, 'Expense', 'INR'),
 (49, '2024-12-13', 'UPI', 'Utilities', 7397, 'Expense', 'INR'),
 (49, '2024-10-31', 'Credit Card', 'Utilities', 8740, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (49, '2025-01-12', 'Credit Card', 'Utilities', 2107, 'Expense', 'INR'),
 (49, '2024-12-09', 'Bank Transfer', 'Utilities', 3625, 'Expense', 'INR'),
 (49, '2024-11-15', 'Cash', 'Travel', 9210, 'Expense', 'INR'),
@@ -17112,7 +17112,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (53, '2024-12-27', 'Cash', 'Shopping', 9908, 'Expense', 'INR'),
 (53, '2024-10-14', 'UPI', 'Shopping', 3831, 'Expense', 'INR'),
 (53, '2024-12-12', 'Bank Transfer', 'Gifts', 3906, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (53, '2024-11-09', 'Bank Transfer', 'Shopping', 8712, 'Expense', 'INR'),
 (53, '2025-03-30', 'Cash', 'Investment', 1470, 'Income', 'INR'),
 (53, '2024-10-12', 'Credit Card', 'Health', 3150, 'Expense', 'INR'),
@@ -17874,7 +17874,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (50, '2025-01-08', 'Credit Card', 'Food', 9813, 'Expense', 'INR'),
 (50, '2024-12-16', 'Debit Card', 'Freelance', 7254, 'Income', 'INR'),
 (50, '2025-01-24', 'Bank Transfer', 'Utilities', 2534, 'Expense', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (50, '2024-10-06', 'UPI', 'Food', 4594, 'Expense', 'INR'),
 (50, '2025-01-15', 'Bank Transfer', 'Freelance', 1474, 'Income', 'INR'),
 (50, '2025-02-02', 'UPI', 'Shopping', 1906, 'Expense', 'INR'),
@@ -18639,7 +18639,7 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (57, '2024-12-04', 'Bank Transfer', 'Entertainment', 2094, 'Expense', 'INR'),
 (57, '2024-12-03', 'Bank Transfer', 'Food', 8002, 'Expense', 'INR'),
 (57, '2025-02-10', 'Debit Card', 'Freelance', 1450, 'Income', 'INR');
-INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
+INSERT INTO `data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`, `Currency`) VALUES
 (57, '2025-01-26', 'UPI', 'Entertainment', 2201, 'Expense', 'INR'),
 (57, '2024-11-11', 'Debit Card', 'Salary', 7422, 'Income', 'INR'),
 (57, '2024-10-16', 'UPI', 'Investment', 6703, 'Income', 'INR'),
@@ -18917,147 +18917,156 @@ INSERT INTO `Data` (`id`, `Date`, `Mode`, `Category`, `Amount`, `income_expense`
 (57, '2024-12-20', 'UPI', 'Investment', 4462, 'Income', 'INR'),
 (57, '2024-12-12', 'UPI', 'Investment', 2452, 'Income', 'INR'),
 (58, '2025-03-09', 'ONLINE', 'SANTOSH SAH', 1000, 'INCOME', 'INR'),
-(58, '2025-03-09', 'CASH', 'MINI SO', 170, 'Income', 'INR'),
-(58, '2025-03-10', 'ONLINE', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-10', 'ONLINE', 'AMAZON', 949, 'Income', 'INR'),
-(58, '2025-03-10', 'CASH', 'STATIONARY', 2, 'Income', 'INR'),
-(58, '2025-03-10', 'ONLINE', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-10', 'CASH', 'Transfer', 80, 'Income', 'INR'),
-(58, '2025-03-10', 'ONLINE', 'Transfer', 75, 'Income', 'INR'),
-(58, '2025-03-10', 'ONLINE', 'Transfer', 7, 'Income', 'INR'),
+(58, '2025-03-09', 'CASH', 'MINI SO', 170, 'EXPENSE', 'INR'),
+(58, '2025-03-10', 'ONLINE', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-10', 'ONLINE', 'AMAZON', 949, 'EXPENSE', 'INR'),
+(58, '2025-03-10', 'CASH', 'STATIONARY', 2, 'EXPENSE', 'INR'),
+(58, '2025-03-10', 'ONLINE', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-10', 'CASH', 'Transfer', 80, 'EXPENSE', 'INR'),
+(58, '2025-03-10', 'ONLINE', 'Transfer', 75, 'EXPENSE', 'INR'),
+(58, '2025-03-10', 'ONLINE', 'Transfer', 7, 'EXPENSE', 'INR'),
 (58, '2025-03-10', 'ONLINE', 'Transfer', 40, 'INCOME', 'INR'),
-(58, '2025-03-10', 'ONLINE', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-11', 'ONLINE', 'Groceries', 55, 'Income', 'INR'),
-(58, '2025-03-12', 'ONLINE', 'Groceries', 30, 'Income', 'INR'),
-(58, '2025-03-12', 'ONLINE', 'Food', 60, 'Income', 'INR'),
-(58, '2025-03-13', 'ONLINE', 'Food', 255, 'Income', 'INR'),
-(58, '2025-03-13', 'CASH', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-14', 'CASH', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-15', 'ONLINE', 'Transfer', 53, 'Income', 'INR'),
-(58, '2025-03-18', 'ONLINE', 'Food', 5, 'Income', 'INR'),
-(58, '2025-03-19', 'CASH', 'Food', 10, 'Income', 'INR'),
-(58, '2025-03-19', 'ONLINE', 'Food', 15, 'Income', 'INR'),
-(58, '2025-03-19', 'ONLINE', 'Food', 30, 'Income', 'INR'),
-(58, '2025-03-19', 'ONLINE', 'Food', 30, 'Income', 'INR'),
-(58, '2025-03-19', 'ONLINE', 'Transfer', 30, 'Income', 'INR'),
-(58, '2025-03-19', 'CASH', 'Groceries', 33, 'Income', 'INR'),
-(58, '2025-03-20', 'ONLINE', 'Transfer', 53, 'Income', 'INR'),
-(58, '2025-03-20', 'ONLINE', 'Transfer', 53, 'Income', 'INR'),
-(58, '2025-03-20', 'ONLINE', 'Transfer', 56, 'Income', 'INR'),
-(58, '2025-03-20', 'ONLINE', 'Transfer', 159, 'Income', 'INR'),
-(58, '2025-03-20', 'CASH', 'Personal', 90, 'Income', 'INR'),
-(58, '2025-03-20', 'CASH', 'Transfer', 73, 'Income', 'INR'),
-(58, '2025-03-22', 'CASH', 'Transfer', 15, 'Income', 'INR'),
-(58, '2025-03-22', 'ONLINE', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-22', 'ONLINE', 'BAKERY', 30, 'Income', 'INR'),
-(58, '2025-03-22', 'CASH', 'Food', 250, 'Income', 'INR'),
-(58, '2025-03-22', 'CASH', 'Food', 30, 'Income', 'INR'),
-(58, '2025-03-22', 'CASH', 'Personal', 106, 'Income', 'INR'),
-(58, '2025-03-23', 'CASH', 'Transfer', 70, 'Income', 'INR'),
-(58, '2025-03-23', 'ONLINE', 'Food', 492, 'Income', 'INR'),
-(58, '2025-03-24', 'ONLINE', 'SANTOSH SAH', 2000, 'Income', 'INR'),
-(58, '2025-03-24', 'ONLINE', 'Food', 60, 'Income', 'INR'),
-(58, '2025-03-24', 'ONLINE', 'Groceries', 60, 'Income', 'INR'),
-(58, '2025-03-25', 'ONLINE', 'Transfer', 500, 'Income', 'INR'),
-(58, '2025-03-26', 'CASH', 'Personal', 500, 'Income', 'INR'),
-(58, '2025-03-26', 'ONLINE', 'Groceries', 10, 'Income', 'INR'),
-(58, '2025-03-26', 'ONLINE', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-27', 'CASH', 'Groceries', 160, 'Income', 'INR'),
-(58, '2025-03-27', 'ONLINE', 'Transfer', 80, 'Income', 'INR'),
-(58, '2025-03-28', 'ONLINE', 'Food', 35, 'Income', 'INR'),
-(58, '2025-03-30', 'CASH', 'Food', 5, 'Income', 'INR'),
-(58, '2025-03-31', 'ONLINE', 'Food', 459, 'Income', 'INR'),
-(58, '2025-03-31', 'ONLINE', 'Transfer', 30, 'Income', 'INR'),
-(58, '2025-03-31', 'ONLINE', 'Groceries', 33, 'Income', 'INR'),
-(58, '2025-03-31', 'CASH', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-31', 'CASH', 'Transfer', 20, 'Income', 'INR'),
-(58, '2025-04-01', 'ONLINE', 'Food', 45, 'Income', 'INR'),
-(58, '2025-04-01', 'ONLINE', 'Food', 160, 'Income', 'INR'),
-(58, '2025-04-01', 'CASH', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-04-03', 'ONLINE', 'Food', 45, 'Income', 'INR'),
-(58, '2025-04-03', 'ONLINE', 'Transfer', 65, 'Income', 'INR'),
-(58, '2025-04-03', 'ONLINE', 'Food', 5, 'Income', 'INR'),
-(58, '2025-04-04', 'CASH', 'Food', 40, 'Income', 'INR'),
-(58, '2025-04-05', 'ONLINE', 'Transfer', 40, 'Income', 'INR'),
-(58, '2025-03-05', 'ONLINE', 'Transfer', 35, 'Income', 'INR'),
-(58, '2025-03-05', 'ONLINE', 'Food', 30, 'Income', 'INR'),
-(58, '2025-03-05', 'ONLINE', 'Transfer', 120, 'Income', 'INR'),
-(58, '2025-03-05', 'ONLINE', 'Transfer', 120, 'Income', 'INR'),
-(58, '2025-03-05', 'ONLINE', 'Food', 480, 'Income', 'INR'),
-(58, '2025-04-05', 'CASH', 'Groceries', 199, 'Income', 'INR'),
-(58, '2025-03-06', 'ONLINE', 'Food', 30, 'Income', 'INR'),
-(58, '2025-03-07', 'ONLINE', 'Food', 40, 'Income', 'INR'),
-(58, '2025-03-07', 'ONLINE', 'Transfer', 60, 'Income', 'INR'),
-(58, '2025-03-07', 'CASH', 'Groceries', 10, 'Income', 'INR'),
-(58, '2025-03-07', 'CASH', 'Groceries', 125, 'Income', 'INR'),
-(58, '2025-03-07', 'CASH', 'Transfer', 10, 'Income', 'INR'),
-(58, '2025-03-08', 'ONLINE', 'Groceries', 20, 'Income', 'INR'),
-(58, '2025-03-08', 'ONLINE', 'Groceries', 30, 'Income', 'INR'),
-(58, '2025-03-08', 'ONLINE', 'Food', 60, 'Income', 'INR'),
-(58, '2025-03-08', 'CASH', 'Food', 20, 'Income', 'INR'),
-(58, '2025-03-08', 'ONLINE', 'Groceries', 22, 'Income', 'INR'),
-(58, '2025-03-08', 'ONLINE', 'Transfer', 57, 'Income', 'INR'),
-(58, '2025-03-09', 'CASH', 'Transfer', 25, 'Income', 'INR'),
-(58, '2025-03-09', 'CASH', 'Food', 30, 'Income', 'INR'),
-(59, '2025-04-01', 'UPI', 'Transfer', 260, 'Income', 'Indian Rupees'),
-(59, '2025-03-31', 'UPI', 'Transfer', 250, 'Income', 'Indian Rupees'),
-(59, '2025-03-31', 'UPI', 'Transfer', 25, 'Income', 'Indian Rupees'),
-(59, '2025-03-31', 'UPI', 'Transfer', 2100, 'Income', 'Indian Rupees'),
-(59, '2025-03-31', 'UPI', 'Transfer', 295, 'Income', 'Indian Rupees'),
-(59, '2025-03-29', 'UPI', 'Transfer', 110, 'Income', 'Indian Rupees'),
-(59, '2025-03-29', 'UPI', 'Transfer', 230, 'Income', 'Indian Rupees'),
-(59, '2025-03-28', 'UPI', 'Transfer', 225, 'Income', 'Indian Rupees'),
-(59, '2025-03-27', 'UPI', 'Transfer', 240, 'Income', 'Indian Rupees'),
-(59, '2025-03-27', 'UPI', 'Transfer', 85, 'Income', 'Indian Rupees'),
-(59, '2025-03-26', 'UPI', 'Transfer', 2500, 'Income', 'Indian Rupees'),
-(59, '2025-03-26', 'UPI', 'Transfer', 25, 'Income', 'Indian Rupees'),
-(59, '2025-03-25', 'UPI', 'Transfer', 250, 'Income', 'Indian Rupees'),
-(59, '2025-03-25', 'UPI', 'Transfer', 220, 'Income', 'Indian Rupees'),
-(59, '2025-03-25', 'UPI', 'Transfer', 220, 'Income', 'Indian Rupees'),
-(59, '2025-03-24', 'UPI', 'Transfer', 220, 'Income', 'Indian Rupees'),
-(59, '2025-03-23', 'UPI', 'Transfer', 220, 'Income', 'Indian Rupees'),
-(59, '2025-03-21', 'UPI', 'Transfer', 220, 'Income', 'Indian Rupees'),
-(59, '2025-03-21', 'UPI', 'Transfer', 260, 'Income', 'Indian Rupees'),
-(59, '2025-03-20', 'UPI', 'Transfer', 130, 'Income', 'Indian Rupees'),
-(60, '2025-01-05', 'UPI', 'Food', 70, 'Income', 'INR'),
-(60, '2025-01-06', 'UPI', 'Food', 72, 'Income', 'INR'),
-(60, '2025-01-07', 'UPI', 'Food', 440, 'Income', 'INR'),
-(60, '2025-01-08', 'UPI', 'Food', 100, 'Income', 'INR'),
-(60, '2025-01-09', 'UPI', 'Food', 25, 'Income', 'INR'),
-(60, '2025-01-10', 'UPI', 'Food', 156, 'Income', 'INR'),
-(60, '2025-01-11', 'UPI', 'Food', 25, 'Income', 'INR'),
-(60, '2025-01-12', 'UPI', 'Food', 51, 'Income', 'INR'),
-(60, '2025-01-13', 'UPI', 'Food', 15, 'Income', 'INR'),
-(60, '2025-01-14', 'UPI', 'Food', 145, 'Income', 'INR'),
-(60, '2025-01-15', 'UPI', 'Food', 36, 'Income', 'INR'),
-(60, '2025-01-16', 'UPI', 'Food', 70, 'Income', 'INR'),
-(60, '2025-01-17', 'UPI', 'Food', 21, 'Income', 'INR'),
-(60, '2025-01-18', 'UPI', 'Food', 20, 'Income', 'INR'),
-(60, '2025-01-19', 'UPI', 'Food', 111, 'Income', 'INR'),
-(60, '2025-01-19', 'UPI', 'Stationery', 50, 'Income', 'INR'),
-(60, '2025-01-19', 'UPI', 'Religious', 250, 'Income', 'INR'),
-(60, '2025-01-19', 'UPI', 'Transport', 100, 'Income', 'INR'),
-(60, '2025-01-20', 'UPI', 'Entertainment', 224, 'Income', 'INR'),
-(60, '2025-01-20', 'UPI', 'Transfer', 115, 'Income', 'INR'),
-(60, '2025-01-21', 'UPI', 'Transfer', 140, 'Income', 'INR'),
-(60, '2025-01-22', 'UPI', 'Transfer', 197, 'Income', 'INR'),
-(60, '2025-01-23', 'UPI', 'Transfer', 110, 'Income', 'INR'),
-(60, '2025-01-24', 'UPI', 'Transfer', 346, 'Income', 'INR'),
-(60, '2025-01-25', 'UPI', 'Transfer', 150, 'Income', 'INR'),
-(60, '2025-01-26', 'UPI', 'Transfer', 140, 'Income', 'INR'),
-(60, '2025-01-27', 'UPI', 'Transfer', 325, 'Income', 'INR'),
-(60, '2025-01-28', 'UPI', 'Transfer', 120, 'Income', 'INR'),
-(60, '2025-01-29', 'UPI', 'Transfer', 60, 'Income', 'INR'),
-(60, '2025-01-30', 'UPI', 'Transfer', 120, 'Income', 'INR'),
-(60, '2025-01-31', 'UPI', 'Transfer', 130, 'Income', 'INR');
+(58, '2025-03-10', 'ONLINE', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-11', 'ONLINE', 'Groceries', 55, 'EXPENSE', 'INR'),
+(58, '2025-03-12', 'ONLINE', 'Groceries', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-12', 'ONLINE', 'Food', 60, 'EXPENSE', 'INR'),
+(58, '2025-03-13', 'ONLINE', 'Food', 255, 'EXPENSE', 'INR'),
+(58, '2025-03-13', 'CASH', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-14', 'CASH', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-15', 'ONLINE', 'Transfer', 53, 'EXPENSE', 'INR'),
+(58, '2025-03-18', 'ONLINE', 'Food', 5, 'EXPENSE', 'INR'),
+(58, '2025-03-19', 'CASH', 'Food', 10, 'EXPENSE', 'INR'),
+(58, '2025-03-19', 'ONLINE', 'Food', 15, 'EXPENSE', 'INR'),
+(58, '2025-03-19', 'ONLINE', 'Food', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-19', 'ONLINE', 'Food', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-19', 'ONLINE', 'Transfer', 30, 'INCOME', 'INR'),
+(58, '2025-03-19', 'CASH', 'Groceries', 33, 'EXPENSE', 'INR'),
+(58, '2025-03-20', 'ONLINE', 'Transfer', 53, 'INCOME', 'INR'),
+(58, '2025-03-20', 'ONLINE', 'Transfer', 53, 'INCOME', 'INR'),
+(58, '2025-03-20', 'ONLINE', 'Transfer', 56, 'INCOME', 'INR'),
+(58, '2025-03-20', 'ONLINE', 'Transfer', 159, 'EXPENSE', 'INR'),
+(58, '2025-03-20', 'CASH', 'Personal', 90, 'EXPENSE', 'INR'),
+(58, '2025-03-20', 'CASH', 'Transfer', 73, 'INCOME', 'INR'),
+(58, '2025-03-22', 'CASH', 'Transfer', 15, 'INCOME', 'INR'),
+(58, '2025-03-22', 'ONLINE', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-22', 'ONLINE', 'BAKERY', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-22', 'CASH', 'Food', 250, 'EXPENSE', 'INR'),
+(58, '2025-03-22', 'CASH', 'Food', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-22', 'CASH', 'Personal', 106, 'EXPENSE', 'INR'),
+(58, '2025-03-23', 'CASH', 'Transfer', 70, 'INCOME', 'INR'),
+(58, '2025-03-23', 'ONLINE', 'Food', 492, 'EXPENSE', 'INR'),
+(58, '2025-03-24', 'ONLINE', 'SANTOSH SAH', 2000, 'INCOME', 'INR'),
+(58, '2025-03-24', 'ONLINE', 'Food', 60, 'EXPENSE', 'INR'),
+(58, '2025-03-24', 'ONLINE', 'Groceries', 60, 'EXPENSE', 'INR'),
+(58, '2025-03-25', 'ONLINE', 'Transfer', 500, 'INCOME', 'INR'),
+(58, '2025-03-26', 'CASH', 'Personal', 500, 'EXPENSE', 'INR'),
+(58, '2025-03-26', 'ONLINE', 'Groceries', 10, 'EXPENSE', 'INR'),
+(58, '2025-03-26', 'ONLINE', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-27', 'CASH', 'Groceries', 160, 'EXPENSE', 'INR'),
+(58, '2025-03-27', 'ONLINE', 'Transfer', 80, 'INCOME', 'INR'),
+(58, '2025-03-28', 'ONLINE', 'Food', 35, 'EXPENSE', 'INR'),
+(58, '2025-03-30', 'CASH', 'Food', 5, 'EXPENSE', 'INR'),
+(58, '2025-03-31', 'ONLINE', 'Food', 459, 'EXPENSE', 'INR'),
+(58, '2025-03-31', 'ONLINE', 'Transfer', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-31', 'ONLINE', 'Groceries', 33, 'EXPENSE', 'INR'),
+(58, '2025-03-31', 'CASH', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-31', 'CASH', 'Transfer', 20, 'EXPENSE', 'INR'),
+(58, '2025-04-01', 'ONLINE', 'Food', 45, 'EXPENSE', 'INR'),
+(58, '2025-04-01', 'ONLINE', 'Food', 160, 'EXPENSE', 'INR'),
+(58, '2025-04-01', 'CASH', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-04-03', 'ONLINE', 'Food', 45, 'EXPENSE', 'INR'),
+(58, '2025-04-03', 'ONLINE', 'Transfer', 65, 'EXPENSE', 'INR'),
+(58, '2025-04-03', 'ONLINE', 'Food', 5, 'EXPENSE', 'INR'),
+(58, '2025-04-04', 'CASH', 'Food', 40, 'EXPENSE', 'INR'),
+(58, '2025-04-05', 'ONLINE', 'Transfer', 40, 'EXPENSE', 'INR'),
+(58, '2025-03-05', 'ONLINE', 'Transfer', 35, 'EXPENSE', 'INR'),
+(58, '2025-03-05', 'ONLINE', 'Food', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-05', 'ONLINE', 'Transfer', 120, 'INCOME', 'INR'),
+(58, '2025-03-05', 'ONLINE', 'Transfer', 120, 'INCOME', 'INR'),
+(58, '2025-03-05', 'ONLINE', 'Food', 480, 'EXPENSE', 'INR'),
+(58, '2025-04-05', 'CASH', 'Groceries', 199, 'EXPENSE', 'INR'),
+(58, '2025-03-06', 'ONLINE', 'Food', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-07', 'ONLINE', 'Food', 40, 'EXPENSE', 'INR'),
+(58, '2025-03-07', 'ONLINE', 'Transfer', 60, 'EXPENSE', 'INR'),
+(58, '2025-03-07', 'CASH', 'Groceries', 10, 'EXPENSE', 'INR'),
+(58, '2025-03-07', 'CASH', 'Groceries', 125, 'EXPENSE', 'INR'),
+(58, '2025-03-07', 'CASH', 'Transfer', 10, 'INCOME', 'INR'),
+(58, '2025-03-08', 'ONLINE', 'Groceries', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-08', 'ONLINE', 'Groceries', 30, 'EXPENSE', 'INR'),
+(58, '2025-03-08', 'ONLINE', 'Food', 60, 'EXPENSE', 'INR'),
+(58, '2025-03-08', 'CASH', 'Food', 20, 'EXPENSE', 'INR'),
+(58, '2025-03-08', 'ONLINE', 'Groceries', 22, 'EXPENSE', 'INR'),
+(58, '2025-03-08', 'ONLINE', 'Transfer', 57, 'INCOME', 'INR'),
+(58, '2025-03-09', 'CASH', 'Transfer', 25, 'EXPENSE', 'INR'),
+(58, '2025-03-09', 'CASH', 'Food', 30, 'EXPENSE', 'INR'),
+(59, '2025-04-01', 'UPI', 'Transfer', 260, 'Expense', 'Indian Rupees'),
+(59, '2025-03-31', 'UPI', 'Transfer', 250, 'Expense', 'Indian Rupees'),
+(59, '2025-03-31', 'UPI', 'Transfer', 25, 'Expense', 'Indian Rupees'),
+(59, '2025-03-31', 'UPI', 'Transfer', 2100, 'Expense', 'Indian Rupees'),
+(59, '2025-03-31', 'UPI', 'Transfer', 295, 'Expense', 'Indian Rupees'),
+(59, '2025-03-29', 'UPI', 'Transfer', 110, 'Expense', 'Indian Rupees'),
+(59, '2025-03-29', 'UPI', 'Transfer', 230, 'Expense', 'Indian Rupees'),
+(59, '2025-03-28', 'UPI', 'Transfer', 225, 'Expense', 'Indian Rupees'),
+(59, '2025-03-27', 'UPI', 'Transfer', 240, 'Expense', 'Indian Rupees'),
+(59, '2025-03-27', 'UPI', 'Transfer', 85, 'Expense', 'Indian Rupees'),
+(59, '2025-03-26', 'UPI', 'Transfer', 2500, 'Expense', 'Indian Rupees'),
+(59, '2025-03-26', 'UPI', 'Transfer', 25, 'Expense', 'Indian Rupees'),
+(59, '2025-03-25', 'UPI', 'Transfer', 250, 'Expense', 'Indian Rupees'),
+(59, '2025-03-25', 'UPI', 'Transfer', 220, 'Expense', 'Indian Rupees'),
+(59, '2025-03-25', 'UPI', 'Transfer', 220, 'Expense', 'Indian Rupees'),
+(59, '2025-03-24', 'UPI', 'Transfer', 220, 'Expense', 'Indian Rupees'),
+(59, '2025-03-23', 'UPI', 'Transfer', 220, 'Expense', 'Indian Rupees'),
+(59, '2025-03-21', 'UPI', 'Transfer', 220, 'Expense', 'Indian Rupees'),
+(59, '2025-03-21', 'UPI', 'Transfer', 260, 'Expense', 'Indian Rupees'),
+(59, '2025-03-20', 'UPI', 'Transfer', 130, 'Expense', 'Indian Rupees'),
+(60, '2025-01-05', 'UPI', 'Food', 70, 'EXPENSE', 'INR'),
+(60, '2025-01-06', 'UPI', 'Food', 72, 'EXPENSE', 'INR'),
+(60, '2025-01-07', 'UPI', 'Food', 440, 'EXPENSE', 'INR'),
+(60, '2025-01-08', 'UPI', 'Food', 100, 'EXPENSE', 'INR'),
+(60, '2025-01-09', 'UPI', 'Food', 25, 'EXPENSE', 'INR'),
+(60, '2025-01-10', 'UPI', 'Food', 156, 'EXPENSE', 'INR'),
+(60, '2025-01-11', 'UPI', 'Food', 25, 'EXPENSE', 'INR'),
+(60, '2025-01-12', 'UPI', 'Food', 51, 'EXPENSE', 'INR'),
+(60, '2025-01-13', 'UPI', 'Food', 15, 'EXPENSE', 'INR'),
+(60, '2025-01-14', 'UPI', 'Food', 145, 'EXPENSE', 'INR'),
+(60, '2025-01-15', 'UPI', 'Food', 36, 'EXPENSE', 'INR'),
+(60, '2025-01-16', 'UPI', 'Food', 70, 'EXPENSE', 'INR'),
+(60, '2025-01-17', 'UPI', 'Food', 21, 'EXPENSE', 'INR'),
+(60, '2025-01-18', 'UPI', 'Food', 20, 'EXPENSE', 'INR'),
+(60, '2025-01-19', 'UPI', 'Food', 111, 'EXPENSE', 'INR'),
+(60, '2025-01-19', 'UPI', 'Stationery', 50, 'EXPENSE', 'INR'),
+(60, '2025-01-19', 'UPI', 'Religious', 250, 'EXPENSE', 'INR'),
+(60, '2025-01-19', 'UPI', 'Transport', 100, 'EXPENSE', 'INR'),
+(60, '2025-01-20', 'UPI', 'Entertainment', 224, 'EXPENSE', 'INR'),
+(60, '2025-01-20', 'UPI', 'Transfer', 115, 'EXPENSE', 'INR'),
+(60, '2025-01-21', 'UPI', 'Transfer', 140, 'EXPENSE', 'INR'),
+(60, '2025-01-22', 'UPI', 'Transfer', 197, 'EXPENSE', 'INR'),
+(60, '2025-01-23', 'UPI', 'Transfer', 110, 'EXPENSE', 'INR'),
+(60, '2025-01-24', 'UPI', 'Transfer', 346, 'EXPENSE', 'INR'),
+(60, '2025-01-25', 'UPI', 'Transfer', 150, 'EXPENSE', 'INR'),
+(60, '2025-01-26', 'UPI', 'Transfer', 140, 'EXPENSE', 'INR'),
+(60, '2025-01-27', 'UPI', 'Transfer', 325, 'EXPENSE', 'INR'),
+(60, '2025-01-28', 'UPI', 'Transfer', 120, 'EXPENSE', 'INR'),
+(60, '2025-01-29', 'UPI', 'Transfer', 60, 'EXPENSE', 'INR'),
+(60, '2025-01-30', 'UPI', 'Transfer', 120, 'EXPENSE', 'INR'),
+(60, '2025-01-31', 'UPI', 'Transfer', 130, 'EXPENSE', 'INR'),
+(1, '2025-08-05', 'UPI', 'Food', 80, 'Expense', 'INR'),
+(1, '2025-08-05', 'UPI', 'Food', 150, 'Income', 'INR'),
+(1, '2025-08-05', 'Bank Transfer', 'Personal', 1000, 'Income', 'INR'),
+(61, '2025-08-05', 'Bank Transfer', 'Personal', 1000, 'Income', 'INR'),
+(61, '2025-08-05', 'UPI', 'Food', 130, 'Expense', 'INR'),
+(61, '2025-08-05', 'UPI', 'Food', 70, 'Expense', 'INR'),
+(61, '2025-08-05', 'UPI', 'Laundry', 40, 'Expense', 'INR'),
+(62, '2025-08-05', 'Bank Transfer', 'Utilities', 1500, 'Expense', 'INR'),
+(62, '2025-08-05', 'Bank Transfer', 'Utilities', 3000, 'Income', 'INR');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Users`
+-- Table structure for table `users`
 --
 
-CREATE TABLE `Users` (
+CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `Name` varchar(50) NOT NULL,
   `Age` int(11) NOT NULL,
@@ -19067,10 +19076,10 @@ CREATE TABLE `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `Users`
+-- Dumping data for table `users`
 --
 
-INSERT INTO `Users` (`user_id`, `Name`, `Age`, `email`, `password`, `phone_number`) VALUES
+INSERT INTO `users` (`user_id`, `Name`, `Age`, `email`, `password`, `phone_number`) VALUES
 (1, 'Himnish', 19, 'himnish@gmail.com', 'himnish@123', '8649213509'),
 (2, 'Rishi', 20, 'rishi@gmail.com', 'rishi@123', '9876543210'),
 (3, 'Surya', 19, 'surya@gmail.com', 'surya@123', '9876543211'),
@@ -19130,22 +19139,24 @@ INSERT INTO `Users` (`user_id`, `Name`, `Age`, `email`, `password`, `phone_numbe
 (57, 'Rutvik', 20, 'rutvik@gmail.com', 'rutvik@123', '9876543265'),
 (58, 'Rishikesh', 20, 'rishikesh@gmail.com', 'rishikesh@123', '9876543266'),
 (59, 'Abhishek', 19, 'abhishek@gmail.com', 'abhishek@123', '9876543267'),
-(60, 'Nitish', 20, 'nitish@gmail.com', 'nitish@123', '9876543268');
+(60, 'Nitish', 20, 'nitish@gmail.com', 'nitish@123', '9876543268'),
+(61, 'sujal agrawal', 20, 'sujal@gmail.com', 'sujal@123', '8799283364'),
+(62, 'abhiram reddy', 20, 'abhiramm@gmail.com', 'abhiram123', '9652431531');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `Data`
+-- Indexes for table `data`
 --
-ALTER TABLE `Data`
+ALTER TABLE `data`
   ADD KEY `FKforTable2` (`id`);
 
 --
--- Indexes for table `Users`
+-- Indexes for table `users`
 --
-ALTER TABLE `Users`
+ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
 
 --
@@ -19153,10 +19164,10 @@ ALTER TABLE `Users`
 --
 
 --
--- Constraints for table `Data`
+-- Constraints for table `data`
 --
-ALTER TABLE `Data`
-  ADD CONSTRAINT `FKforTable2` FOREIGN KEY (`id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `data`
+  ADD CONSTRAINT `FKforTable2` FOREIGN KEY (`id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
