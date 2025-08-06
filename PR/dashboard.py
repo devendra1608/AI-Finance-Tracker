@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 from database import get_user_data, get_user_summary, get_category_data, get_monthly_trends
 
 def dashboard():
+
     """Display main dashboard after login"""
     st.markdown(f'<h1 class="main-header"> Welcome, {st.session_state.user_name}! </h1>', unsafe_allow_html=True)
     
