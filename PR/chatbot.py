@@ -1,98 +1,78 @@
 import streamlit as st
-import mysql.connector
 import pandas as pd
 import requests
-import json
-from datetime import datetime, timedelta
-import plotly.express as px
-import plotly.graph_objects as go
+from database import get_user_summary, get_mysql_connection
+from mysql.connector import Error
 
 # Grok AI API Configuration
 GROK_API_KEY = st.secrets.get("GROK_API_KEY", "your-grok-api-key-here")
 GROK_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
-def get_mysql_connection():
-    """Create MySQL connection to XAMPP database"""
+def call_grok_api(user_query, context_data):
+    """Call Grok AI API with user query and context data"""
     try:
-        connection = mysql.connector.connect(
-            host='localhost',
-            port=3306,
-            database='dabba',
-            user='root',
-            password=''
-        )
-        return connection
-    except Exception as e:
-        st.error(f"Error connecting to MySQL database: {e}")
-        return None
-
-def get_user_data(user_id):
-    """Get user's expense data from MySQL database"""
-    connection = get_mysql_connection()
-    if connection is None:
-        return pd.DataFrame()
-    
-    try:
-        query = '''
-            SELECT Date, Mode, Category, Amount, income_expense, Currency
-            FROM Data 
-            WHERE id = %s
-            ORDER BY Date DESC
-        '''
-        df = pd.read_sql_query(query, connection, params=(user_id,))
-        connection.close()
-        return df
-    except Exception as e:
-        st.error(f"Error fetching user data: {e}")
-        return pd.DataFrame()
-
-def get_user_summary(user_id):
-    """Get user's financial summary from MySQL database"""
-    connection = get_mysql_connection()
-    if connection is None:
-        return None
-    
-    try:
-        cursor = connection.cursor()
+        # Prepare the context with user data
+        context = f"""
+        You are a financial advisor chatbot for the Dabba expense tracker app. 
+        Provide responses between 2-6 sentences - not too short, not too long.
         
-        # Get total income
-        cursor.execute('''
-            SELECT COALESCE(SUM(Amount), 0) as total_income
-            FROM Data 
-            WHERE id = %s AND income_expense = 'Income'
-        ''', (user_id,))
-        total_income = cursor.fetchone()[0]
+        User Data:
+        - Income: ₹{context_data.get('total_income', 0):,.0f}
+        - Expenses: ₹{context_data.get('total_expenses', 0):,.0f}
+        - Net: ₹{context_data.get('net_balance', 0):,.0f}
+        - Transactions: {context_data.get('transaction_count', 0)}
         
-        # Get total expenses
-        cursor.execute('''
-            SELECT COALESCE(SUM(Amount), 0) as total_expenses
-            FROM Data 
-            WHERE id = %s AND income_expense = 'Expense'
-        ''', (user_id,))
-        total_expenses = cursor.fetchone()[0]
+        Top Categories: {context_data.get('category_data', pd.DataFrame()).head(3).to_string() if not context_data.get('category_data', pd.DataFrame()).empty else 'None'}
         
-        # Get transaction count
-        cursor.execute('''
-            SELECT COUNT(*) as transaction_count
-            FROM Data 
-            WHERE id = %s
-        ''', (user_id,))
-        transaction_count = cursor.fetchone()[0]
+        Recent: {context_data.get('recent_data', pd.DataFrame()).head(3).to_string() if not context_data.get('recent_data', pd.DataFrame()).empty else 'None'}
         
-        cursor.close()
-        connection.close()
+        Query: {user_query}
         
-        return {
-            'total_income': total_income,
-            'total_expenses': total_expenses,
-            'net_balance': total_income - total_expenses,
-            'transaction_count': transaction_count
+        RESPONSE RULES:
+        - Keep responses between 2-6 sentences (not too short, not too long)
+        - Be DIRECT and TO-THE-POINT
+        - Use bullet points for multiple points
+        - Focus on actionable advice
+        - Use specific numbers from user data
+        - Provide context and explanation
+        - Include practical suggestions
+        """
+        
+        headers = {
+            "Authorization": f"Bearer {GROK_API_KEY}",
+            "Content-Type": "application/json"
         }
+        
+        payload = {
+            "model": "llama3-8b-8192",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are a helpful financial advisor. Provide responses between 2-6 sentences - not too short, not too long. Be direct and to-the-point while providing context and practical suggestions. Use bullet points when needed. Focus on actionable insights and specific data from the user's financial records."
+                },
+                {
+                    "role": "user",
+                    "content": context
+                }
+            ],
+            "temperature": 0.3,
+            "max_tokens": 500
+        }
+        
+        response = requests.post(GROK_API_URL, headers=headers, json=payload)
+        
+        if response.status_code == 200:
+            result = response.json()
+            return result['choices'][0]['message']['content']
+        else:
+            st.error(f"Error calling Grok API: {response.status_code} - {response.text}")
+            return "I'm sorry, I'm having trouble processing your request right now. Please try again later."
+            
     except Exception as e:
-        st.error(f"Error fetching user summary: {e}")
-        return None
+        st.error(f"Error calling Grok API: {e}")
+        return "I'm sorry, I'm experiencing technical difficulties. Please try again later."
 
-def get_analytics_data(user_id):
+def get_analytics_data_for_chatbot(user_id):
     """Get comprehensive analytics data for the chatbot"""
     connection = get_mysql_connection()
     if connection is None:
@@ -153,73 +133,9 @@ def get_analytics_data(user_id):
             'payment_data': payment_data,
             'recent_data': recent_data
         }
-    except Exception as e:
+    except Error as e:
         st.error(f"Error fetching analytics data: {e}")
         return {}
-
-def call_grok_api(user_query, context_data):
-    """Call Grok AI API with user query and context data"""
-    try:
-        # Prepare the context with user data
-        context = f"""
-        You are a financial advisor chatbot for the Dabba expense tracker app. 
-        Provide responses between 2-6 sentences - not too short, not too long.
-        
-        User Data:
-        - Income: ₹{context_data.get('total_income', 0):,.0f}
-        - Expenses: ₹{context_data.get('total_expenses', 0):,.0f}
-        - Net: ₹{context_data.get('net_balance', 0):,.0f}
-        - Transactions: {context_data.get('transaction_count', 0)}
-        
-        Top Categories: {context_data.get('category_data', pd.DataFrame()).head(3).to_string() if not context_data.get('category_data', pd.DataFrame()).empty else 'None'}
-        
-        Recent: {context_data.get('recent_data', pd.DataFrame()).head(3).to_string() if not context_data.get('recent_data', pd.DataFrame()).empty else 'None'}
-        
-        Query: {user_query}
-        
-        RESPONSE RULES:
-        - Keep responses between 2-6 sentences (not too short, not too long)
-        - Be DIRECT and TO-THE-POINT
-        - Use bullet points for multiple points
-        - Focus on actionable advice
-        - Use specific numbers from user data
-        - Provide context and explanation
-        - Include practical suggestions
-        """
-        
-        headers = {
-            "Authorization": f"Bearer {GROK_API_KEY}",
-            "Content-Type": "application/json"
-        }
-        
-        payload = {
-            "model": "llama-3-70b-8192",
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "You are a helpful financial advisor. Provide responses between 2-6 sentences - not too short, not too long. Be direct and to-the-point while providing context and practical suggestions. Use bullet points when needed. Focus on actionable insights and specific data from the user's financial records."
-                },
-                {
-                    "role": "user",
-                    "content": context
-                }
-            ],
-            "temperature": 0.3,  # Lower temperature for more focused responses
-            "max_tokens": 500    # Increased max tokens for 2-6 sentence responses
-        }
-        
-        response = requests.post(GROK_API_URL, headers=headers, json=payload)
-        
-        if response.status_code == 200:
-            result = response.json()
-            return result['choices'][0]['message']['content']
-        else:
-            st.error(f"Error calling Grok API: {response.status_code} - {response.text}")
-            return "I'm sorry, I'm having trouble processing your request right now. Please try again later."
-            
-    except Exception as e:
-        st.error(f"Error calling Grok API: {e}")
-        return "I'm sorry, I'm experiencing technical difficulties. Please try again later."
 
 def get_quick_response(user_query, context_data):
     """Provide quick template-based responses for common questions"""
@@ -275,22 +191,33 @@ def chatbot_page():
     st.markdown('<h1 class="main-header">🤖 Dabba Financial Advisor Chatbot</h1>', unsafe_allow_html=True)
     
     # Navigation
-    col1, col2, col3 = st.columns([1, 3, 1])
+    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
     with col1:
         if st.button("🏠 Dashboard"):
             st.session_state.current_page = "dashboard"
             st.rerun()
+    with col2:
+        if st.button("📊 Advanced Analytics"):
+            st.session_state.current_page = "analytics"
+            st.rerun()
     with col3:
+        if st.button("💰 Add Transaction"):
+            st.session_state.current_page = "transaction"
+            st.rerun()
+    with col4:
+        if st.button("💳 Debt Tracker"):
+            st.session_state.current_page = "debt"
+            st.rerun()
+    with col5:
+        if st.button("🎯 Goals Manager"):
+            st.session_state.current_page = "goals"
+            st.rerun()
+    with col6:
         if st.button("🚪 Logout"):
             st.session_state.authenticated = False
             st.session_state.user_id = None
             st.session_state.user_name = None
             st.rerun()
-    
-    # Check if user is authenticated
-    if not st.session_state.get('authenticated', False):
-        st.error("Please login first to access the chatbot.")
-        return
     
     # Get user data
     user_id = st.session_state.get('user_id')
@@ -302,7 +229,7 @@ def chatbot_page():
     
     # Get user summary and analytics data
     user_summary = get_user_summary(user_id)
-    analytics_data = get_analytics_data(user_id)
+    analytics_data = get_analytics_data_for_chatbot(user_id)
     
     if user_summary is None:
         st.error("Unable to load user data. Please try again.")
@@ -370,7 +297,7 @@ def chatbot_page():
             # Add bot response to chat history
             st.session_state.chat_history.append({'role': 'assistant', 'content': response})
         
-        # Rerun to update the display
+        # Clear the input field by rerunning
         st.rerun()
     
     # Clear chat button
@@ -395,7 +322,25 @@ def chatbot_page():
     for i, question in enumerate(suggested_questions):
         with cols[i % 2]:
             if st.button(question, key=f"suggest_{i}"):
-                st.session_state.user_input = question
+                # Add the question directly to chat history and process it
+                st.session_state.chat_history.append({'role': 'user', 'content': question})
+                
+                # Prepare context data
+                context_data = {
+                    'total_income': user_summary['total_income'],
+                    'total_expenses': user_summary['total_expenses'],
+                    'net_balance': user_summary['net_balance'],
+                    'transaction_count': user_summary['transaction_count'],
+                    'category_data': analytics_data.get('category_data', pd.DataFrame()),
+                    'recent_data': analytics_data.get('recent_data', pd.DataFrame()),
+                    'payment_data': analytics_data.get('payment_data', pd.DataFrame())
+                }
+                
+                # Show loading message and get response
+                with st.spinner("🤖 Analyzing your financial data..."):
+                    response = call_grok_api(question, context_data)
+                    st.session_state.chat_history.append({'role': 'assistant', 'content': response})
+                
                 st.rerun()
     
     # Display some quick insights
@@ -421,49 +366,4 @@ def chatbot_page():
                     "💳 Most Used Payment Method",
                     top_payment['Mode'],
                     f"{top_payment['TransactionCount']} transactions"
-                )
-
-def main():
-    """Main function to run the chatbot"""
-    # Initialize session state
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = "chatbot"
-    
-    # Page configuration
-    st.set_page_config(
-        page_title="Dabba - Financial Advisor Chatbot",
-        page_icon="🤖",
-        layout="wide",
-        initial_sidebar_state="collapsed"
-    )
-    
-    # Custom CSS
-    st.markdown("""
-    <style>
-        .main-header {
-            font-size: 3rem;
-            font-weight: bold;
-            text-align: center;
-            color: #1f77b4;
-            margin-bottom: 2rem;
-        }
-        .chat-message {
-            padding: 1rem;
-            margin: 0.5rem 0;
-            border-radius: 10px;
-        }
-        .user-message {
-            background-color: #e3f2fd;
-            text-align: right;
-        }
-        .bot-message {
-            background-color: #f5f5f5;
-            text-align: left;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    chatbot_page()
-
-if __name__ == "__main__":
-    main() 
+                ) 
