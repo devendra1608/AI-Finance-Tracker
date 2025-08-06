@@ -237,36 +237,8 @@ def calculate_debt_snowball_strategy(user_id):
 
 def debt_tracker_page():
     """Display the debt tracker interface"""
-    st.markdown('<h1 class="main-header">💳 Debt Tracker</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header"> Debt Tracker</h1>', unsafe_allow_html=True)
     
-    # Navigation
-    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
-    with col1:
-        if st.button("🏠 Dashboard"):
-            st.session_state.current_page = "dashboard"
-            st.rerun()
-    with col2:
-        if st.button("💰 Add Transaction"):
-            st.session_state.current_page = "transaction"
-            st.rerun()
-    with col3:
-        if st.button("🤖 AI Chatbot"):
-            st.session_state.current_page = "chatbot"
-            st.rerun()
-    with col4:
-        if st.button("🎯 Goals Manager"):
-            st.session_state.current_page = "goals"
-            st.rerun()
-    with col5:
-        if st.button("📊 Advanced Analytics"):
-            st.session_state.current_page = "analytics"
-            st.rerun()
-    with col6:
-        if st.button("🚪 Logout"):
-            st.session_state.authenticated = False
-            st.session_state.user_id = None
-            st.session_state.user_name = None
-            st.rerun()
     
     # Check if user is authenticated
     if not st.session_state.get('authenticated', False):
@@ -287,13 +259,13 @@ def debt_tracker_page():
     debts_df = get_user_debts(user_id)
     
     # Tabs for different debt management features
-    tab1, tab2, tab3, tab4 = st.tabs(["📊 Debt Overview", "➕ Add Debt", "💸 Make Payment", "🎯 Repayment Strategy"])
+    tab1, tab2, tab3, tab4 = st.tabs([" Debt Overview", " Add Debt", " Make Payment", " Repayment Strategy"])
     
     with tab1:
-        st.markdown("### 📊 Your Debt Overview")
+        st.markdown("###  Your Debt Overview")
         
         if debts_df.empty:
-            st.info("🎉 You have no active debts! Great job managing your finances.")
+            st.info(" You have no active debts! Great job managing your finances.")
         else:
             # Debt summary metrics
             total_debt = debts_df['current_balance'].sum()
@@ -303,16 +275,16 @@ def debt_tracker_page():
             
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.metric("💰 Total Debt", f"₹{total_debt:,.0f}")
+                st.metric(" Total Debt", f"₹{total_debt:,.0f}")
             with col2:
-                st.metric("📈 Original Amount", f"₹{total_original:,.0f}")
+                st.metric(" Original Amount", f"₹{total_original:,.0f}")
             with col3:
-                st.metric("✅ Amount Paid", f"₹{total_paid:,.0f}")
+                st.metric(" Amount Paid", f"₹{total_paid:,.0f}")
             with col4:
-                st.metric("📊 Avg Interest Rate", f"{avg_interest:.1f}%")
+                st.metric(" Avg Interest Rate", f"{avg_interest:.1f}%")
             
             # Display debts table
-            st.markdown("### 📋 Your Debts")
+            st.markdown("###  Your Debts")
             
             # Format the dataframe for display
             display_df = debts_df.copy()
@@ -347,7 +319,7 @@ def debt_tracker_page():
                     st.plotly_chart(fig, use_container_width=True)
     
     with tab2:
-        st.markdown("### ➕ Add New Debt")
+        st.markdown("###  Add New Debt")
         
         with st.form("add_debt_form"):
             col1, col2 = st.columns(2)
@@ -376,15 +348,15 @@ def debt_tracker_page():
                     if add_debt(user_id, debt_name, lender_name, original_amount, current_balance,
                                interest_rate, interest_type, payment_frequency, start_date, due_date,
                                minimum_payment, debt_priority, notes):
-                        st.success("✅ Debt added successfully!")
+                        st.success(" Debt added successfully!")
                         st.rerun()
                     else:
-                        st.error("❌ Failed to add debt. Please try again.")
+                        st.error(" Failed to add debt. Please try again.")
                 else:
-                    st.error("❌ Please fill in all required fields.")
+                    st.error(" Please fill in all required fields.")
     
     with tab3:
-        st.markdown("### 💸 Make Debt Payment")
+        st.markdown("###  Make Debt Payment")
         
         if debts_df.empty:
             st.info("No active debts to make payments on.")
@@ -409,18 +381,18 @@ def debt_tracker_page():
                     current_balance = float(debt_options.loc[selected_index, 'current_balance'])
                     
                     if payment_amount > current_balance:
-                        st.warning(f"⚠️ Payment amount (₹{payment_amount:,.0f}) exceeds current balance (₹{current_balance:,.0f}). The debt will be fully paid.")
+                        st.warning(f" Payment amount (₹{payment_amount:,.0f}) exceeds current balance (₹{current_balance:,.0f}). The debt will be fully paid.")
                     
                     if add_debt_payment(user_id, debt_id, payment_amount, payment_date, payment_type, notes):
-                        st.success("✅ Payment recorded successfully!")
+                        st.success(" Payment recorded successfully!")
                         st.rerun()
                     else:
-                        st.error("❌ Failed to record payment. Please try again.")
+                        st.error(" Failed to record payment. Please try again.")
                 elif submitted:
-                    st.error("❌ Please enter a valid payment amount.")
+                    st.error(" Please enter a valid payment amount.")
     
     with tab4:
-        st.markdown("### 🎯 Optimal Repayment Strategy")
+        st.markdown("###  Optimal Repayment Strategy")
         
         if debts_df.empty:
             st.info("No active debts to create repayment strategy for.")
@@ -432,7 +404,7 @@ def debt_tracker_page():
             col1, col2 = st.columns(2)
             
             with col1:
-                st.markdown("#### 🏔️ Debt Avalanche Method (Recommended)")
+                st.markdown("####  Debt Avalanche Method (Recommended)")
                 st.markdown("**Strategy**: Pay off debts with the highest interest rates first.")
                 st.markdown("**Benefits**: Minimizes total interest paid over time.")
                 
@@ -450,7 +422,7 @@ def debt_tracker_page():
                     st.info("No debts available for strategy calculation.")
             
             with col2:
-                st.markdown("#### ❄️ Debt Snowball Method")
+                st.markdown("####  Debt Snowball Method")
                 st.markdown("**Strategy**: Pay off debts with the lowest balances first.")
                 st.markdown("**Benefits**: Provides psychological wins and motivation.")
                 
@@ -468,7 +440,7 @@ def debt_tracker_page():
                     st.info("No debts available for strategy calculation.")
             
             # Comparison
-            st.markdown("### 📊 Strategy Comparison")
+            st.markdown("###  Strategy Comparison")
             
             if avalanche_strategy and snowball_strategy and avalanche_strategy['highest_interest_debt'] is not None and snowball_strategy['lowest_balance_debt'] is not None:
                 col1, col2, col3 = st.columns(3)
@@ -483,7 +455,7 @@ def debt_tracker_page():
                     st.metric("Snowball Priority", f"₹{snowball_strategy['lowest_balance_debt']['current_balance']:,.0f} balance")
                 
                 st.markdown("""
-                **💡 Recommendation**: 
+                ** Recommendation**: 
                 - Use **Debt Avalanche** if you want to save the most money on interest
                 - Use **Debt Snowball** if you need motivation and quick wins
                 - Both methods work, but avalanche typically saves more money in the long run

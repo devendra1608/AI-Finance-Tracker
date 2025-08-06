@@ -145,79 +145,50 @@ def get_quick_response(user_query, context_data):
     if any(word in query_lower for word in ['income', 'expense', 'compare', 'balance']):
         net_balance = context_data.get('net_balance', 0)
         if net_balance > 0:
-            return f"✅ You're in good shape! Net balance: ₹{net_balance:,.0f} (Income exceeds expenses). Your financial health is positive, which means you're saving money effectively. Consider investing the surplus for better returns."
+            return f" You're in good shape! Net balance: ₹{net_balance:,.0f} (Income exceeds expenses). Your financial health is positive, which means you're saving money effectively. Consider investing the surplus for better returns."
         elif net_balance < 0:
-            return f"⚠️ Watch your spending! Net balance: ₹{net_balance:,.0f} (Expenses exceed income). You're spending more than you earn, which can lead to financial stress. Focus on reducing expenses in your top spending categories to improve your financial situation."
+            return f" Watch your spending! Net balance: ₹{net_balance:,.0f} (Expenses exceed income). You're spending more than you earn, which can lead to financial stress. Focus on reducing expenses in your top spending categories to improve your financial situation."
         else:
-            return "📊 Your income and expenses are perfectly balanced. This is a stable financial position, but you might want to consider increasing your income or reducing expenses to build savings. Aim for a positive net balance for better financial security."
+            return " Your income and expenses are perfectly balanced. This is a stable financial position, but you might want to consider increasing your income or reducing expenses to build savings. Aim for a positive net balance for better financial security."
     
     # Top spending categories
     elif any(word in query_lower for word in ['category', 'spending', 'biggest', 'top']):
         category_data = context_data.get('category_data', pd.DataFrame())
         if not category_data.empty:
             top_cat = category_data.iloc[0]
-            return f"🏆 Top category: {top_cat['Category']} (₹{top_cat['TotalAmount']:,.0f}). This represents your highest spending area, accounting for {top_cat['TransactionCount']} transactions. Consider reviewing this category for potential savings opportunities and setting a budget limit."
-        return "📊 No spending data available yet. Start adding transactions to see your spending patterns and get personalized insights. This will help you identify areas where you can optimize your expenses."
+            return f" Top category: {top_cat['Category']} (₹{top_cat['TotalAmount']:,.0f}). This represents your highest spending area, accounting for {top_cat['TransactionCount']} transactions. Consider reviewing this category for potential savings opportunities and setting a budget limit."
+        return " No spending data available yet. Start adding transactions to see your spending patterns and get personalized insights. This will help you identify areas where you can optimize your expenses."
     
     # Recent transactions
     elif any(word in query_lower for word in ['recent', 'latest', 'transactions']):
         recent_data = context_data.get('recent_data', pd.DataFrame())
         if not recent_data.empty:
             latest = recent_data.iloc[0]
-            return f"📅 Latest: {latest['Category']} - ₹{latest['Amount']:,.0f} ({latest['income_expense']}). Your recent spending shows a {latest['income_expense'].lower()} transaction. Monitor your recent patterns to maintain financial discipline and avoid unnecessary expenses."
-        return "📅 No recent transactions found. Add your daily expenses and income to track your financial activity. Regular transaction logging helps you stay aware of your spending habits and financial goals."
+            return f" Latest: {latest['Category']} - ₹{latest['Amount']:,.0f} ({latest['income_expense']}). Your recent spending shows a {latest['income_expense'].lower()} transaction. Monitor your recent patterns to maintain financial discipline and avoid unnecessary expenses."
+        return " No recent transactions found. Add your daily expenses and income to track your financial activity. Regular transaction logging helps you stay aware of your spending habits and financial goals."
     
     # Savings advice
     elif any(word in query_lower for word in ['save', 'savings', 'improve']):
         net_balance = context_data.get('net_balance', 0)
         if net_balance < 0:
-            return "💡 Cut expenses in your top spending category to improve savings. Your current spending exceeds income, so prioritize reducing non-essential expenses. Consider creating a budget and tracking every expense to identify areas for improvement."
+            return " Cut expenses in your top spending category to improve savings. Your current spending exceeds income, so prioritize reducing non-essential expenses. Consider creating a budget and tracking every expense to identify areas for improvement."
         else:
-            return "💡 Great job! Consider increasing your savings rate. You're already saving money, which is excellent. Look into investment options or emergency funds to make your money work harder for you."
+            return " Great job! Consider increasing your savings rate. You're already saving money, which is excellent. Look into investment options or emergency funds to make your money work harder for you."
     
     # Payment methods
     elif any(word in query_lower for word in ['payment', 'method', 'mode']):
         payment_data = context_data.get('payment_data', pd.DataFrame())
         if not payment_data.empty:
             top_payment = payment_data.iloc[0]
-            return f"💳 Most used: {top_payment['Mode']} ({top_payment['TransactionCount']} transactions). This is your preferred payment method, indicating your comfort with digital transactions. Consider diversifying payment methods for better financial tracking and security."
-        return "💳 No payment data available. Start recording your transactions to see which payment methods you use most. This information helps in better financial planning and understanding your spending patterns."
+            return f" Most used: {top_payment['Mode']} ({top_payment['TransactionCount']} transactions). This is your preferred payment method, indicating your comfort with digital transactions. Consider diversifying payment methods for better financial tracking and security."
+        return " No payment data available. Start recording your transactions to see which payment methods you use most. This information helps in better financial planning and understanding your spending patterns."
     
     # Return None to use AI response
     return None
 
 def chatbot_page():
     """Display the chatbot interface"""
-    st.markdown('<h1 class="main-header">🤖 Dabba Financial Advisor Chatbot</h1>', unsafe_allow_html=True)
-    
-    # Navigation
-    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
-    with col1:
-        if st.button("🏠 Dashboard"):
-            st.session_state.current_page = "dashboard"
-            st.rerun()
-    with col2:
-        if st.button("📊 Advanced Analytics"):
-            st.session_state.current_page = "analytics"
-            st.rerun()
-    with col3:
-        if st.button("💰 Add Transaction"):
-            st.session_state.current_page = "transaction"
-            st.rerun()
-    with col4:
-        if st.button("💳 Debt Tracker"):
-            st.session_state.current_page = "debt"
-            st.rerun()
-    with col5:
-        if st.button("🎯 Goals Manager"):
-            st.session_state.current_page = "goals"
-            st.rerun()
-    with col6:
-        if st.button("🚪 Logout"):
-            st.session_state.authenticated = False
-            st.session_state.user_id = None
-            st.session_state.user_name = None
-            st.rerun()
+    st.markdown('<h1 class="main-header">Financial Advisor Chatbot</h1>', unsafe_allow_html=True)
     
     # Get user data
     user_id = st.session_state.get('user_id')
@@ -235,22 +206,20 @@ def chatbot_page():
         st.error("Unable to load user data. Please try again.")
         return
     
-    # Display user info
-    st.markdown(f"### 👤 Welcome, {user_name}!")
     
-    # Quick stats
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric("💰 Total Income", f"₹{user_summary['total_income']:,.0f}")
-    with col2:
-        st.metric("💸 Total Expenses", f"₹{user_summary['total_expenses']:,.0f}")
-    with col3:
-        st.metric("📊 Net Balance", f"₹{user_summary['net_balance']:,.0f}")
-    with col4:
-        st.metric("📅 Transactions", user_summary['transaction_count'])
+    # # Quick stats
+    # col1, col2, col3, col4 = st.columns(4)
+    # with col1:
+    #     st.metric(" Total Income", f"₹{user_summary['total_income']:,.0f}")
+    # with col2:
+    #     st.metric(" Total Expenses", f"₹{user_summary['total_expenses']:,.0f}")
+    # with col3:
+    #     st.metric(" Net Balance", f"₹{user_summary['net_balance']:,.0f}")
+    # with col4:
+    #     st.metric(" Transactions", user_summary['transaction_count'])
     
     # Chatbot interface
-    st.markdown("### 💬 Ask me anything about your finances!")
+    st.markdown("###  Ask me anything about your finances!")
     
     # Initialize chat history in session state
     if 'chat_history' not in st.session_state:
@@ -263,7 +232,7 @@ def chatbot_page():
             if message['role'] == 'user':
                 st.markdown(f"**You:** {message['content']}")
             else:
-                st.markdown(f"**🤖 Financial Advisor:** {message['content']}")
+                st.markdown(f"** Financial Advisor:** {message['content']}")
     
     # User input
     user_input = st.text_input("Ask me about your spending patterns, savings, or financial advice:", key="user_input")
@@ -284,7 +253,7 @@ def chatbot_page():
         }
         
         # Show loading message
-        with st.spinner("🤖 Analyzing your financial data..."):
+        with st.spinner(" Analyzing your financial data..."):
             # Try quick response first
             quick_response = get_quick_response(user_input, context_data)
             
@@ -306,7 +275,7 @@ def chatbot_page():
         st.rerun()
     
     # Suggested questions
-    st.markdown("### 💡 Quick Questions:")
+    st.markdown("###  Quick Questions:")
     suggested_questions = [
         "What's my net balance?",
         "Top spending category?",
@@ -337,7 +306,7 @@ def chatbot_page():
                 }
                 
                 # Show loading message and get response
-                with st.spinner("🤖 Analyzing your financial data..."):
+                with st.spinner(" Analyzing your financial data..."):
                     response = call_grok_api(question, context_data)
                     st.session_state.chat_history.append({'role': 'assistant', 'content': response})
                 
@@ -345,7 +314,7 @@ def chatbot_page():
     
     # Display some quick insights
     if analytics_data.get('category_data') is not None and not analytics_data['category_data'].empty:
-        st.markdown("### 📊 Quick Insights")
+        st.markdown("###  Quick Insights")
         
         col1, col2 = st.columns(2)
         
@@ -353,7 +322,7 @@ def chatbot_page():
             # Top spending category
             top_category = analytics_data['category_data'].iloc[0]
             st.metric(
-                "🏆 Top Spending Category",
+                " Top Spending Category",
                 top_category['Category'],
                 f"₹{top_category['TotalAmount']:,.0f}"
             )
@@ -363,7 +332,7 @@ def chatbot_page():
             if not analytics_data['payment_data'].empty:
                 top_payment = analytics_data['payment_data'].iloc[0]
                 st.metric(
-                    "💳 Most Used Payment Method",
+                    " Most Used Payment Method",
                     top_payment['Mode'],
                     f"{top_payment['TransactionCount']} transactions"
                 ) 

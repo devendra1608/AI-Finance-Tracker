@@ -4,36 +4,8 @@ from database import insert_transaction, get_user_data, get_user_summary, get_av
 
 def transaction_page():
     """Display the transaction insertion page"""
-    st.markdown(f'<h1 class="main-header">💰 Add New Transaction - {st.session_state.user_name}</h1>', unsafe_allow_html=True)
+    st.markdown(f'<h1 class="main-header"> Add New Transaction </h1>', unsafe_allow_html=True)
     
-    # Navigation
-    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
-    with col1:
-        if st.button("🏠 Dashboard"):
-            st.session_state.current_page = "dashboard"
-            st.rerun()
-    with col2:
-        if st.button("📊 Advanced Analytics"):
-            st.session_state.current_page = "analytics"
-            st.rerun()
-    with col3:
-        if st.button("🤖 AI Chatbot"):
-            st.session_state.current_page = "chatbot"
-            st.rerun()
-    with col4:
-        if st.button("💳 Debt Tracker"):
-            st.session_state.current_page = "debt"
-            st.rerun()
-    with col5:
-        if st.button("🎯 Goals Manager"):
-            st.session_state.current_page = "goals"
-            st.rerun()
-    with col6:
-        if st.button("🚪 Logout"):
-            st.session_state.authenticated = False
-            st.session_state.user_id = None
-            st.session_state.user_name = None
-            st.rerun()
     
     # Get available categories and modes
     available_categories = get_available_categories()
@@ -62,7 +34,7 @@ def transaction_page():
     all_categories.sort()
     all_modes.sort()
     
-    st.markdown("### 📝 Add New Transaction")
+    st.markdown("###  Add New Transaction")
     
     # Transaction form
     with st.form("transaction_form"):
@@ -71,14 +43,14 @@ def transaction_page():
         with col1:
             # Date picker
             transaction_date = st.date_input(
-                "📅 Transaction Date",
+                " Transaction Date",
                 value=datetime.now().date(),
                 max_value=datetime.now().date()
             )
             
             # Amount input
             amount = st.number_input(
-                "💰 Amount (₹)",
+                " Amount (₹)",
                 min_value=0.01,
                 max_value=1000000.00,
                 value=100.00,
@@ -88,7 +60,7 @@ def transaction_page():
             
             # Transaction type
             transaction_type = st.selectbox(
-                "📊 Transaction Type",
+                " Transaction Type",
                 options=["Expense", "Income"],
                 index=0
             )
@@ -96,14 +68,14 @@ def transaction_page():
         with col2:
             # Payment mode
             payment_mode = st.selectbox(
-                "💳 Payment Mode",
+                " Payment Mode",
                 options=all_modes,
                 index=0
             )
             
             # Category
             category = st.selectbox(
-                "🏷️ Category",
+                " Category",
                 options=all_categories,
                 index=0
             )
@@ -118,14 +90,14 @@ def transaction_page():
         # Custom category input
         st.markdown("**Or enter a custom category:**")
         custom_category = st.text_input(
-            "🏷️ Custom Category (optional)",
+            " Custom Category (optional)",
             placeholder="Enter custom category if not in the list above"
         )
         
         # Submit button
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            submit_button = st.form_submit_button("💾 Save Transaction", use_container_width=True)
+            submit_button = st.form_submit_button(" Save Transaction", use_container_width=True)
         
         if submit_button:
             # Validate inputs
@@ -157,7 +129,7 @@ def transaction_page():
                     st.balloons()
                     
                     # Show transaction summary
-                    st.markdown("### 📋 Transaction Summary")
+                    st.markdown("###  Transaction Summary")
                     col1, col2 = st.columns(2)
                     with col1:
                         st.metric("Date", transaction_date.strftime("%Y-%m-%d"))
@@ -169,23 +141,23 @@ def transaction_page():
                         st.metric("Currency", currency)
                     
                     # Show updated financial summary
-                    st.markdown("### 📊 Updated Financial Summary")
+                    st.markdown("###  Updated Financial Summary")
                     updated_summary = get_user_summary(st.session_state.user_id)
                     if updated_summary:
                         col1, col2, col3, col4 = st.columns(4)
                         with col1:
-                            st.metric("💰 Total Income", f"₹{updated_summary['total_income']:,.0f}")
+                            st.metric(" Total Income", f"₹{updated_summary['total_income']:,.0f}")
                         with col2:
                             st.metric("💸 Total Expenses", f"₹{updated_summary['total_expenses']:,.0f}")
                         with col3:
-                            st.metric("📊 Net Balance", f"₹{updated_summary['net_balance']:,.0f}")
+                            st.metric(" Net Balance", f"₹{updated_summary['net_balance']:,.0f}")
                         with col4:
-                            st.metric("📅 Total Transactions", updated_summary['transaction_count'])
+                            st.metric(" Total Transactions", updated_summary['transaction_count'])
                 else:
                     st.error("❌ Failed to add transaction. Please try again.")
     
     # Recent transactions for reference
-    st.markdown("### 📋 Your Recent Transactions")
+    st.markdown("###  Your Recent Transactions")
     recent_data = get_user_data(st.session_state.user_id)
     if not recent_data.empty:
         st.dataframe(
@@ -198,10 +170,10 @@ def transaction_page():
             }
         )
     else:
-        st.info("💡 No transactions found. Add your first transaction above!")
+        st.info(" No transactions found. Add your first transaction above!")
     
     # Popular categories and payment modes
-    st.markdown("### 📈 Your Most Used Categories & Payment Modes")
+    st.markdown("###  Your Most Used Categories & Payment Modes")
     
     # Get user's most used categories and payment modes
     user_data = get_user_data(st.session_state.user_id)
@@ -209,7 +181,7 @@ def transaction_page():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("**🏷️ Your Top Categories**")
+            st.markdown("** Your Top Categories**")
             category_counts = user_data['Category'].value_counts().head(5)
             if not category_counts.empty:
                 for category, count in category_counts.items():
@@ -218,7 +190,7 @@ def transaction_page():
                 st.info("No category data available yet.")
         
         with col2:
-            st.markdown("**💳 Your Payment Methods**")
+            st.markdown("** Your Payment Methods**")
             mode_counts = user_data['Mode'].value_counts().head(5)
             if not mode_counts.empty:
                 for mode, count in mode_counts.items():
@@ -226,15 +198,4 @@ def transaction_page():
             else:
                 st.info("No payment method data available yet.")
     
-    # Quick tips
-    st.markdown("### 💡 Quick Tips")
-    tips = [
-        "💡 Use specific categories to better track your spending patterns",
-        "💡 Regular transactions help build better financial insights",
-        "💡 You can add custom categories for unique expenses",
-        "💡 All transactions are automatically linked to your account",
-        "💡 Check the dashboard to see your updated financial summary"
-    ]
     
-    for tip in tips:
-        st.markdown(tip) 

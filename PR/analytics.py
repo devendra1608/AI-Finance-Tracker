@@ -131,46 +131,17 @@ def get_advanced_analytics_data(user_id):
 
 def advanced_analytics_page():
     """Display advanced analytics page with comprehensive spending trends"""
-    st.markdown(f'<h1 class="main-header">📊 Advanced Analytics - {st.session_state.user_name}</h1>', unsafe_allow_html=True)
-    
-    # Navigation
-    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
-    with col1:
-        if st.button("🏠 Dashboard"):
-            st.session_state.current_page = "dashboard"
-            st.rerun()
-    with col2:
-        if st.button("💰 Add Transaction"):
-            st.session_state.current_page = "transaction"
-            st.rerun()
-    with col3:
-        if st.button("🤖 AI Chatbot"):
-            st.session_state.current_page = "chatbot"
-            st.rerun()
-    with col4:
-        if st.button("💳 Debt Tracker"):
-            st.session_state.current_page = "debt"
-            st.rerun()
-    with col5:
-        if st.button("🎯 Goals Manager"):
-            st.session_state.current_page = "goals"
-            st.rerun()
-    with col6:
-        if st.button("🚪 Logout"):
-            st.session_state.authenticated = False
-            st.session_state.user_id = None
-            st.session_state.user_name = None
-            st.rerun()
+    st.markdown(f'<h1 class="main-header"> Advanced Analytics</h1>', unsafe_allow_html=True)
     
     # Get advanced analytics data
     analytics_data = get_advanced_analytics_data(st.session_state.user_id)
     
     if not analytics_data:
-        st.error("❌ Unable to load analytics data. Please try again.")
+        st.error(" Unable to load analytics data. Please try again.")
         return
     
     # 1. Daily Spending Trends
-    st.markdown("### 📈 Daily Spending Patterns")
+    st.markdown("###  Daily Spending Patterns")
     daily_data = analytics_data['daily_data']
     if not daily_data.empty:
         col1, col2 = st.columns(2)
@@ -222,7 +193,7 @@ def advanced_analytics_page():
             st.plotly_chart(fig, use_container_width=True)
     
     # 2. Category Spending Trends Over Time
-    st.markdown("### 🏷️ Category Spending Trends")
+    st.markdown("###  Category Spending Trends")
     category_trends = analytics_data['category_trends']
     if not category_trends.empty:
         # Pivot data for heatmap
@@ -254,7 +225,7 @@ def advanced_analytics_page():
             st.warning(f"Could not generate top categories chart: {e}")
     
     # 3. Payment Method Analysis
-    st.markdown("### 💳 Payment Method Analysis")
+    st.markdown("###  Payment Method Analysis")
     payment_analysis = analytics_data['payment_analysis']
     if not payment_analysis.empty:
         col1, col2 = st.columns(2)
@@ -280,7 +251,7 @@ def advanced_analytics_page():
             st.plotly_chart(fig, use_container_width=True)
     
     # 4. Weekly Spending Patterns
-    st.markdown("### 📅 Weekly Spending Patterns")
+    st.markdown("###  Weekly Spending Patterns")
     weekly_patterns = analytics_data['weekly_patterns']
     if not weekly_patterns.empty:
         fig = px.bar(
@@ -294,7 +265,7 @@ def advanced_analytics_page():
         st.plotly_chart(fig, use_container_width=True)
     
     # 5. Monthly Income vs Expense Ratio
-    st.markdown("### 💰 Monthly Financial Health")
+    st.markdown("###  Monthly Financial Health")
     monthly_ratio = analytics_data['monthly_ratio']
     if not monthly_ratio.empty:
         col1, col2 = st.columns(2)
@@ -336,7 +307,7 @@ def advanced_analytics_page():
             st.plotly_chart(fig, use_container_width=True)
     
     # 6. Spending Insights
-    st.markdown("### 💡 Spending Insights")
+    st.markdown("###  Spending Insights")
     
     if not daily_data.empty and not category_trends.empty:
         col1, col2, col3 = st.columns(3)
@@ -376,7 +347,7 @@ def advanced_analytics_page():
                 st.metric("Average Daily Spending", "N/A")
     
     # 7. Detailed Statistics Table
-    st.markdown("### 📊 Detailed Statistics")
+    st.markdown("###  Detailed Statistics")
     
     if not payment_analysis.empty:
         st.dataframe(

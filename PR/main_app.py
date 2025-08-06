@@ -11,6 +11,7 @@ from transactions import transaction_page
 from chatbot import chatbot_page
 from debt_tracker import debt_tracker_page
 from goals_manager import goals_management_page
+from analytics import advanced_analytics_page
 
 # Page configuration
 st.set_page_config(
@@ -23,41 +24,16 @@ st.set_page_config(
 # Custom CSS for better styling
 st.markdown("""
 <style>
+    /* Hide the default navigation if needed */
+    .stSidebar {
+        display: none;
+    }
+    
+    /* Custom styling for the app */
     .main-header {
-        font-size: 3rem;
-        font-weight: bold;
-        text-align: center;
-        color: #1f77b4;
+        padding: 1rem 0;
+        border-bottom: 1px solid #e0e0e0;
         margin-bottom: 2rem;
-    }
-    .login-container {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        background-color: white;
-    }
-    .success-message {
-        background-color: #d4edda;
-        color: #155724;
-        padding: 1rem;
-        border-radius: 5px;
-        margin: 1rem 0;
-    }
-    .error-message {
-        background-color: #f8d7da;
-        color: #721c24;
-        padding: 1rem;
-        border-radius: 5px;
-        margin: 1rem 0;
-    }
-    .metric-card {
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-radius: 10px;
-        text-align: center;
-        margin: 0.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -72,30 +48,33 @@ if 'user_name' not in st.session_state:
 
 def main():
     """Main application function"""
-    # Initialize current page in session state
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = "dashboard"
-    
+    # Show login/signup page first
     if not st.session_state.authenticated:
         login_page()
+        # If login is successful, rerun to load dashboard and navigation
+        if st.session_state.authenticated:
+            st.session_state.current_page = "dashboard"
+            st.rerun()
     else:
-        if st.session_state.current_page == "analytics":
-            # Import analytics module dynamically to avoid circular imports
-            try:
-                from analytics import advanced_analytics_page
-                advanced_analytics_page()
-            except ImportError:
-                st.error("Analytics module not available. Please check the analytics.py file.")
-        elif st.session_state.current_page == "chatbot":
-            chatbot_page()
-        elif st.session_state.current_page == "transaction":
-            transaction_page()
-        elif st.session_state.current_page == "debt":
-            debt_tracker_page()
-        elif st.session_state.current_page == "goals":
-            goals_management_page()
-        else:
-            dashboard()
+        # Navigation bar and pages only after authentication
+        pages = [
+            st.Page(dashboard, title="Dashboard", icon="📊"),
+            st.Page(transaction_page, title="Transactions", icon="💳"),
+            st.Page(advanced_analytics_page, title="Analytics", icon="📈"),
+            st.Page(chatbot_page, title="AI Assistant", icon="🤖"),
+            st.Page(debt_tracker_page, title="Debt Tracker", icon="📋"),
+            st.Page(goals_management_page, title="Goals", icon="🎯"),
+        ]
+        pg = st.navigation(pages, position="top", expanded=True)
+        # Add logout functionality
+        col1, col2, col3 = st.columns([6, 1, 0.6])
+        with col3:
+            if st.button("Logout", use_container_width=True):
+                st.session_state.authenticated = False
+                st.session_state.user_id = None
+                st.session_state.user_name = None
+                st.rerun()
+        pg.run()
 
 if __name__ == "__main__":
-    main() 
+    main()

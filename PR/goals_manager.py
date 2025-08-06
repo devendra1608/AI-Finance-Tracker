@@ -243,36 +243,8 @@ def calculate_goal_insights(user_id):
 
 def goals_management_page():
     """Display the goals management interface"""
-    st.markdown('<h1 class="main-header">🎯 Financial Goals Manager</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header"> Financial Goals Manager</h1>', unsafe_allow_html=True)
     
-    # Navigation
-    col1, col2, col3, col4, col5, col6 = st.columns([1, 1, 1, 1, 1, 1])
-    with col1:
-        if st.button("🏠 Dashboard"):
-            st.session_state.current_page = "dashboard"
-            st.rerun()
-    with col2:
-        if st.button("💰 Add Transaction"):
-            st.session_state.current_page = "transaction"
-            st.rerun()
-    with col3:
-        if st.button("🤖 AI Chatbot"):
-            st.session_state.current_page = "chatbot"
-            st.rerun()
-    with col4:
-        if st.button("💳 Debt Tracker"):
-            st.session_state.current_page = "debt"
-            st.rerun()
-    with col5:
-        if st.button("📊 Advanced Analytics"):
-            st.session_state.current_page = "analytics"
-            st.rerun()
-    with col6:
-        if st.button("🚪 Logout"):
-            st.session_state.authenticated = False
-            st.session_state.user_id = None
-            st.session_state.user_name = None
-            st.rerun()
     
     # Check if user is authenticated
     if not st.session_state.get('authenticated', False):
@@ -294,42 +266,42 @@ def goals_management_page():
     insights = calculate_goal_insights(user_id)
     
     # Tabs for different goal management features
-    tab1, tab2, tab3, tab4 = st.tabs(["📊 Goals Overview", "➕ Add Goal", "💰 Add Contribution", "📈 Progress Tracking"])
+    tab1, tab2, tab3, tab4 = st.tabs([" Goals Overview", " Add Goal", " Add Contribution", " Progress Tracking"])
     
     with tab1:
-        st.markdown("### 📊 Your Financial Goals Overview")
+        st.markdown("###  Your Financial Goals Overview")
         
         if goals_df.empty:
-            st.info("🎯 You haven't set any financial goals yet. Start by adding your first goal!")
+            st.info(" You haven't set any financial goals yet. Start by adding your first goal!")
             st.markdown("""
-            **💡 Why set financial goals?**
-            - 🎯 Stay focused on what matters most
-            - 📈 Track your progress over time
-            - 💰 Build wealth systematically
+            ** Why set financial goals?**
+            -  Stay focused on what matters most
+            -  Track your progress over time
+            -  Build wealth systematically
             - 🏆 Celebrate achievements
-            - 📊 Make informed financial decisions
+            -  Make informed financial decisions
             """)
         else:
             # Goals summary metrics
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.metric("🎯 Total Goals", insights['total_goals'])
+                st.metric(" Total Goals", insights['total_goals'])
             with col2:
-                st.metric("📈 Active Goals", insights['active_goals'])
+                st.metric(" Active Goals", insights['active_goals'])
             with col3:
-                st.metric("✅ Completed Goals", insights['completed_goals'])
+                st.metric(" Completed Goals", insights['completed_goals'])
             with col4:
-                st.metric("📊 Overall Progress", f"{insights['total_progress']:.1f}%")
+                st.metric(" Overall Progress", f"{insights['total_progress']:.1f}%")
             
             # Progress overview
             col1, col2 = st.columns(2)
             with col1:
-                st.metric("💰 Total Target", f"₹{insights['total_target']:,.0f}")
+                st.metric(" Total Target", f"₹{insights['total_target']:,.0f}")
             with col2:
-                st.metric("💵 Total Saved", f"₹{insights['total_current']:,.0f}")
+                st.metric(" Total Saved", f"₹{insights['total_current']:,.0f}")
             
             # Display goals with progress bars
-            st.markdown("### 🎯 Your Goals")
+            st.markdown("###  Your Goals")
             
             for _, goal in goals_df.iterrows():
                 with st.container():
@@ -347,25 +319,25 @@ def goals_management_page():
                     
                     with col2:
                         if goal['goal_status'] == 'Active':
-                            st.success("🟢 Active")
+                            st.success(" Active")
                         elif goal['goal_status'] == 'Completed':
-                            st.success("✅ Completed")
+                            st.success(" Completed")
                         elif goal['goal_status'] == 'Paused':
-                            st.warning("⏸️ Paused")
+                            st.warning(" Paused")
                         else:
-                            st.error("❌ Cancelled")
+                            st.error(" Cancelled")
                     
                     with col3:
                         if goal['days_remaining'] > 0:
-                            st.info(f"📅 {goal['days_remaining']} days left")
+                            st.info(f" {goal['days_remaining']} days left")
                         elif goal['days_remaining'] < 0:
-                            st.error(f"⚠️ {abs(goal['days_remaining'])} days overdue")
+                            st.error(f" {abs(goal['days_remaining'])} days overdue")
                         else:
-                            st.warning("📅 Due today")
+                            st.warning(" Due today")
                     
                     with col4:
                         if goal['goal_status'] == 'Active':
-                            if st.button("💰 Add", key=f"add_cont_{goal['goal_id']}"):
+                            if st.button(" Add", key=f"add_cont_{goal['goal_id']}"):
                                 st.session_state.selected_goal = goal['goal_id']
                                 st.session_state.current_tab = "tab3"
                                 st.rerun()
@@ -393,7 +365,7 @@ def goals_management_page():
                         st.plotly_chart(fig, use_container_width=True)
     
     with tab2:
-        st.markdown("### ➕ Add New Financial Goal")
+        st.markdown("###  Add New Financial Goal")
         
         with st.form("add_goal_form"):
             col1, col2 = st.columns(2)
@@ -419,16 +391,16 @@ def goals_management_page():
                 if goal_name and goal_description and target_amount > 0:
                     if add_goal(user_id, goal_name, goal_description, target_amount, goal_category,
                                goal_priority, target_date, monthly_target, notes):
-                        st.success("✅ Goal created successfully!")
+                        st.success(" Goal created successfully!")
                         st.balloons()
                         st.rerun()
                     else:
-                        st.error("❌ Failed to create goal. Please try again.")
+                        st.error(" Failed to create goal. Please try again.")
                 else:
-                    st.error("❌ Please fill in all required fields.")
+                    st.error(" Please fill in all required fields.")
         
         # Goal templates
-        st.markdown("### 💡 Popular Goal Templates")
+        st.markdown("###  Popular Goal Templates")
         
         templates = [
             {
@@ -460,7 +432,7 @@ def goals_management_page():
         cols = st.columns(2)
         for i, template in enumerate(templates):
             with cols[i % 2]:
-                with st.expander(f"📋 {template['name']}"):
+                with st.expander(f" {template['name']}"):
                     st.markdown(f"**Description**: {template['description']}")
                     st.markdown(f"**Category**: {template['category']}")
                     st.markdown(f"**Priority**: {template['priority']}")
@@ -470,7 +442,7 @@ def goals_management_page():
                         st.rerun()
     
     with tab3:
-        st.markdown("### 💰 Add Contribution to Goal")
+        st.markdown("###  Add Contribution to Goal")
         
         if goals_df.empty:
             st.info("No goals available. Create a goal first to add contributions.")
@@ -541,7 +513,7 @@ def goals_management_page():
                         
                         if add_goal_contribution(user_id, goal_id, contribution_amount, 
                                                contribution_date, contribution_type, notes):
-                            st.success("✅ Contribution added successfully!")
+                            st.success(" Contribution added successfully!")
                             st.balloons()
                             
                             # Clear selected goal from session state
@@ -550,12 +522,12 @@ def goals_management_page():
                             
                             st.rerun()
                         else:
-                            st.error("❌ Failed to add contribution. Please try again.")
+                            st.error(" Failed to add contribution. Please try again.")
                     elif submitted:
-                        st.error("❌ Please enter a valid contribution amount.")
+                        st.error(" Please enter a valid contribution amount.")
     
     with tab4:
-        st.markdown("### 📈 Progress Tracking & Insights")
+        st.markdown("###  Progress Tracking & Insights")
         
         if goals_df.empty:
             st.info("No goals to track. Create some goals to see your progress insights.")
@@ -564,25 +536,25 @@ def goals_management_page():
             col1, col2 = st.columns(2)
             
             with col1:
-                st.markdown("#### 📊 Overall Progress")
+                st.markdown("####  Overall Progress")
                 st.metric("Average Progress", f"{insights['avg_progress']:.1f}%")
                 st.metric("Total Saved", f"₹{insights['total_current']:,.0f}")
                 st.metric("Remaining to Save", f"₹{insights['total_target'] - insights['total_current']:,.0f}")
             
             with col2:
-                st.markdown("#### 🎯 Goal Status")
+                st.markdown("####  Goal Status")
                 st.metric("Active Goals", insights['active_goals'])
                 st.metric("Completed Goals", insights['completed_goals'])
                 st.metric("Completion Rate", f"{(insights['completed_goals'] / insights['total_goals'] * 100):.1f}%")
             
             # Upcoming deadlines
             if not insights['upcoming_deadlines'].empty:
-                st.markdown("#### ⚠️ Upcoming Deadlines (Next 30 Days)")
+                st.markdown("####  Upcoming Deadlines (Next 30 Days)")
                 for _, goal in insights['upcoming_deadlines'].iterrows():
                     st.warning(f"**{goal['goal_name']}** - Due in {goal['days_remaining']} days. Progress: {goal['progress_percentage']:.1f}%")
             
             # Progress trends
-            st.markdown("#### 📈 Progress Trends")
+            st.markdown("####  Progress Trends")
             
             # Get contributions over time
             contributions_df = get_goal_contributions(user_id)
@@ -602,19 +574,19 @@ def goals_management_page():
                 st.plotly_chart(fig, use_container_width=True)
             
             # Goal recommendations
-            st.markdown("#### 💡 Smart Recommendations")
+            st.markdown("####  Smart Recommendations")
             
             if insights['avg_progress'] < 50:
-                st.info("🎯 **Focus on High-Priority Goals**: Your average progress is below 50%. Consider focusing on high-priority goals first.")
+                st.info(" **Focus on High-Priority Goals**: Your average progress is below 50%. Consider focusing on high-priority goals first.")
             
             if insights['active_goals'] > 5:
-                st.warning("📊 **Too Many Active Goals**: You have many active goals. Consider pausing some to focus on the most important ones.")
+                st.warning(" **Too Many Active Goals**: You have many active goals. Consider pausing some to focus on the most important ones.")
             
             if insights['total_progress'] > 80:
                 st.success("🏆 **Great Progress**: You're making excellent progress! Keep up the momentum.")
             
             # Contribution history
-            st.markdown("#### 📋 Recent Contributions")
+            st.markdown("####  Recent Contributions")
             recent_contributions = get_goal_contributions(user_id)
             if not recent_contributions.empty:
                 st.dataframe(

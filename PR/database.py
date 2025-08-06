@@ -9,7 +9,7 @@ def get_mysql_connection():
     try:
         connection = mysql.connector.connect(
             host='localhost',
-            port=3306,  # Default XAMPP MySQL port
+            port=3307,  # Default XAMPP MySQL port
             database='dabba',
             user='root',
             password=''
