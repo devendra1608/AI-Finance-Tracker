@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 05, 2025 at 03:17 PM
+-- Generation Time: Aug 06, 2025 at 06:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -19122,6 +19122,62 @@ INSERT INTO `debt_payments` (`payment_id`, `debt_id`, `user_id`, `payment_amount
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `goals`
+--
+
+CREATE TABLE `goals` (
+  `goal_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `goal_name` varchar(255) NOT NULL,
+  `goal_description` text DEFAULT NULL,
+  `target_amount` decimal(15,2) NOT NULL,
+  `current_amount` decimal(15,2) DEFAULT 0.00,
+  `goal_category` enum('Emergency Fund','Vacation','Home','Car','Education','Wedding','Business','Investment','Other') DEFAULT 'Other',
+  `goal_priority` enum('High','Medium','Low') DEFAULT 'Medium',
+  `target_date` date DEFAULT NULL,
+  `start_date` date DEFAULT curdate(),
+  `goal_status` enum('Active','Completed','Paused','Cancelled') DEFAULT 'Active',
+  `monthly_target` decimal(15,2) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `goals`
+--
+
+INSERT INTO `goals` (`goal_id`, `user_id`, `goal_name`, `goal_description`, `target_amount`, `current_amount`, `goal_category`, `goal_priority`, `target_date`, `start_date`, `goal_status`, `monthly_target`, `notes`, `created_at`, `updated_at`) VALUES
+(1, 1, 'phone', 'i want to buy a samsung phone', 35000.00, 10000.00, 'Other', 'High', '2025-12-31', '2025-08-06', 'Active', 5000.00, '', '2025-08-06 04:52:50', '2025-08-06 04:53:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `goal_contributions`
+--
+
+CREATE TABLE `goal_contributions` (
+  `contribution_id` int(11) NOT NULL,
+  `goal_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `contribution_amount` decimal(15,2) NOT NULL,
+  `contribution_date` date NOT NULL,
+  `contribution_type` enum('Manual','Automatic','Bonus','Refund','Other') DEFAULT 'Manual',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `goal_contributions`
+--
+
+INSERT INTO `goal_contributions` (`contribution_id`, `goal_id`, `user_id`, `contribution_amount`, `contribution_date`, `contribution_type`, `notes`, `created_at`) VALUES
+(1, 1, 1, 5000.00, '2025-08-06', 'Bonus', '', '2025-08-06 04:53:36'),
+(2, 1, 1, 5000.00, '2025-08-06', 'Bonus', '', '2025-08-06 04:53:52');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -19228,6 +19284,21 @@ ALTER TABLE `debt_payments`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `goals`
+--
+ALTER TABLE `goals`
+  ADD PRIMARY KEY (`goal_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `goal_contributions`
+--
+ALTER TABLE `goal_contributions`
+  ADD PRIMARY KEY (`contribution_id`),
+  ADD KEY `goal_id` (`goal_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -19248,6 +19319,18 @@ ALTER TABLE `debts`
 --
 ALTER TABLE `debt_payments`
   MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `goals`
+--
+ALTER TABLE `goals`
+  MODIFY `goal_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `goal_contributions`
+--
+ALTER TABLE `goal_contributions`
+  MODIFY `contribution_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -19271,6 +19354,19 @@ ALTER TABLE `debts`
 ALTER TABLE `debt_payments`
   ADD CONSTRAINT `debt_payments_ibfk_1` FOREIGN KEY (`debt_id`) REFERENCES `debts` (`debt_id`),
   ADD CONSTRAINT `debt_payments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `goals`
+--
+ALTER TABLE `goals`
+  ADD CONSTRAINT `goals_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `goal_contributions`
+--
+ALTER TABLE `goal_contributions`
+  ADD CONSTRAINT `goal_contributions_ibfk_1` FOREIGN KEY (`goal_id`) REFERENCES `goals` (`goal_id`),
+  ADD CONSTRAINT `goal_contributions_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
