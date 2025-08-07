@@ -13,6 +13,8 @@ from chatbot import chatbot_page
 from debt_tracker import debt_tracker_page
 from goals_manager import goals_management_page
 from analytics import advanced_analytics_page
+from loan_comparison import loan_comparison_page
+from investments import investments_page
 
 # Page configuration
 st.set_page_config(
@@ -90,9 +92,11 @@ def main():
             st.Page(dashboard, title="Dashboard", icon="📊"),
             st.Page(transaction_page, title="Transactions", icon="💳"),
             st.Page(advanced_analytics_page, title="Analytics", icon="📈"),
+            st.Page(goals_management_page, title="Goals", icon="🎯"),
             st.Page(chatbot_page, title="AI Assistant", icon="🤖"),
             st.Page(debt_tracker_page, title="Debt Tracker", icon="📋"),
-            st.Page(goals_management_page, title="Goals", icon="🎯"),
+            st.Page(loan_comparison_page, title="Loan Comparison", icon="🏦"),
+            st.Page(investments_page, title="Investments", icon="💹"),  
         ]
 
         pg = st.navigation(pages, position="top", expanded=True)
